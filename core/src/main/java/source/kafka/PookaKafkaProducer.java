@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by nickozoulis on 09/06/2016.
  */
-public class PookaKafkaProducer implements source.kafka.Producer<String, String> {
+class PookaKafkaProducer implements source.kafka.Producer<String, String> {
     private Properties properties;
     private ProducerConfig config;
     private Producer<String, String> producer;

@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Created by nickozoulis on 09/06/2016.
  */
-public class PookaKafkaConsumer implements Consumer {
+class PookaKafkaConsumer implements Consumer {
     private Properties properties;
     private final KafkaConsumer<String, String> consumer;
 

@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by nickozoulis on 10/06/2016.
  */
-public class PookaKafkaCoreSpout implements Spout<KafkaSpout> {
+class PookaKafkaCoreSpout implements Spout<KafkaSpout> {
     private KafkaSpout kafkaSpout;
 
     public PookaKafkaCoreSpout(Properties properties) {

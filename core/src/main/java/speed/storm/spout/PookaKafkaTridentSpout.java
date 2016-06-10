@@ -12,7 +12,7 @@ import java.util.Properties;
 /**
  * Created by nickozoulis on 10/06/2016.
  */
-public class PookaKafkaTridentSpout implements Spout<OpaqueTridentKafkaSpout> {
+class PookaKafkaTridentSpout implements Spout<OpaqueTridentKafkaSpout> {
     private OpaqueTridentKafkaSpout spout;
 
     public PookaKafkaTridentSpout(Properties properties) {
