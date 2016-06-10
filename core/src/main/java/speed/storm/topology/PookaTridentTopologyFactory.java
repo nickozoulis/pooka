@@ -18,7 +18,7 @@ public class PookaTridentTopologyFactory extends TopologyFactory {
 
         Object spout =  new KafkaSpoutFactory(properties).getSpout();
         if (spout instanceof OpaqueTridentKafkaSpout) {
-            KafkaSpout kafkaSpout = (KafkaSpout) spout;
+            OpaqueTridentKafkaSpout tridentKafkaSpout = (OpaqueTridentKafkaSpout) spout;
 
            //TODO:
         }
