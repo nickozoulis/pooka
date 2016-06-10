@@ -14,6 +14,6 @@ public class KafkaProducerFactory extends ProducerFactory {
 
     @Override
     Producer getProducer() {
-        return new CustomKafkaProducer(properties);
+        return new PookaKafkaProducer(properties);
     }
 }

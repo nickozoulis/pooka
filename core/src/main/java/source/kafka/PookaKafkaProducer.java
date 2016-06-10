@@ -10,13 +10,13 @@ import java.util.Properties;
 /**
  * Created by nickozoulis on 09/06/2016.
  */
-public class CustomKafkaProducer implements source.kafka.Producer<String, String> {
+public class PookaKafkaProducer implements source.kafka.Producer<String, String> {
     private Properties properties;
     private ProducerConfig config;
     private Producer<String, String> producer;
     private KeyedMessage<String, String> data;
 
-    public CustomKafkaProducer(Properties properties) {
+    public PookaKafkaProducer(Properties properties) {
         this.properties = properties;
         config = new kafka.producer.ProducerConfig(properties);
     }

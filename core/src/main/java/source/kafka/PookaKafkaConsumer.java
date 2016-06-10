@@ -9,11 +9,11 @@ import java.util.*;
 /**
  * Created by nickozoulis on 09/06/2016.
  */
-public class CustomKafkaConsumer implements Consumer {
+public class PookaKafkaConsumer implements Consumer {
     private Properties properties;
     private final KafkaConsumer<String, String> consumer;
 
-    public CustomKafkaConsumer(Properties properties) {
+    public PookaKafkaConsumer(Properties properties) {
         this.properties = properties;
         this.consumer = new KafkaConsumer<>(properties);
     }

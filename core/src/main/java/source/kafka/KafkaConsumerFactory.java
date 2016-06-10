@@ -14,6 +14,6 @@ public class KafkaConsumerFactory extends ConsumerFactory {
 
     @Override
     public Consumer getConsumer() {
-        return new CustomKafkaConsumer(properties);
+        return new PookaKafkaConsumer(properties);
     }
 }
