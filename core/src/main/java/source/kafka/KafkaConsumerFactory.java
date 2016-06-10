@@ -7,16 +7,13 @@ import java.util.Properties;
  */
 public class KafkaConsumerFactory extends ConsumerFactory {
     private Properties properties;
-    private String topic, groupId;
 
-    public KafkaConsumerFactory(Properties properties, String topic, String groupId) {
+    public KafkaConsumerFactory(Properties properties) {
         this.properties = properties;
-        this.topic = topic;
-        this.groupId = groupId;
     }
 
     @Override
     public Consumer getConsumer() {
-        return new CustomKafkaConsumer(properties, topic, groupId);
+        return new CustomKafkaConsumer(properties);
     }
 }
