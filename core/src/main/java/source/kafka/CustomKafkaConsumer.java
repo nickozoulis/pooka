@@ -4,7 +4,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
-
 import java.util.*;
 
 /**
@@ -12,20 +11,21 @@ import java.util.*;
  */
 public class CustomKafkaConsumer implements Consumer {
     private Properties properties;
-    private String topic, groupId;
     private final KafkaConsumer<String, String> consumer;
 
-    public CustomKafkaConsumer(Properties properties, String topic, String groupId) {
+    public CustomKafkaConsumer(Properties properties) {
         this.properties = properties;
-        this.topic = topic;
-        this.groupId = groupId;
-
         this.consumer = new KafkaConsumer<>(properties);
     }
 
     @Override
     public void open() {
-        this.consumer.subscribe(Arrays.asList(topic));
+        this.consumer.subscribe(Arrays.asList(properties.getProperty("topic")));
+    }
+
+    @Override
+    public Iterator fetch() {
+        return this;
     }
 
     @Override
