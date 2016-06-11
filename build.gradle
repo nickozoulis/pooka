@@ -9,6 +9,9 @@ subprojects {
         mavenCentral()
     }
 
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
         compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.1'

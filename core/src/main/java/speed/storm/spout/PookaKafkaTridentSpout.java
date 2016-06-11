@@ -1,20 +1,22 @@
 package speed.storm.spout;
 
-import backtype.storm.spout.SchemeAsMultiScheme;
-import storm.kafka.BrokerHosts;
-import storm.kafka.StringScheme;
-import storm.kafka.ZkHosts;
-import storm.kafka.trident.OpaqueTridentKafkaSpout;
-import storm.kafka.trident.TridentKafkaConfig;
-import storm.trident.TridentTopology;
+import org.apache.storm.kafka.BrokerHosts;
+import org.apache.storm.kafka.StringScheme;
+import org.apache.storm.kafka.ZkHosts;
+import org.apache.storm.kafka.trident.OpaqueTridentKafkaSpout;
+import org.apache.storm.kafka.trident.TridentKafkaConfig;
+import org.apache.storm.spout.SchemeAsMultiScheme;
+import org.apache.storm.trident.TridentTopology;
+
 import java.util.Properties;
 
 /**
  * Created by nickozoulis on 10/06/2016.
  */
-class PookaKafkaTridentSpout implements Spout<OpaqueTridentKafkaSpout> {
+class PookaKafkaTridentSpout implements SpoutClient<OpaqueTridentKafkaSpout> {
     private OpaqueTridentKafkaSpout spout;
 
+    //TODO:
     public PookaKafkaTridentSpout(Properties properties) {
         TridentTopology topology = new TridentTopology();
         BrokerHosts zk = new ZkHosts(properties.getProperty("host"));
