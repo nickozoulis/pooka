@@ -2,8 +2,9 @@
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
-import speed.storm.bolt.CountBolt;
+import org.apache.storm.tuple.Fields;
 import speed.storm.bolt.SplitBolt;
+import speed.storm.bolt.TumblingWindowBolt;
 import speed.storm.spout.PookaKafkaCoreSpout;
 
 import java.util.Properties;
@@ -27,7 +28,7 @@ public class TestMain {
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaCoreSpout(p).getSpout());
         builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new CountBolt()).shuffleGrouping("word-spitter");
+        builder.setBolt("word-counter", new TumblingWindowBolt()).fieldsGrouping("word-spitter", new Fields("word"));
 
 
         LocalCluster cluster = new LocalCluster();

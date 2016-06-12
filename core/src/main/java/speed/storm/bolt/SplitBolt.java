@@ -24,25 +24,24 @@ public class SplitBolt extends BaseRichBolt {
 
     @Override
     public void execute(Tuple input) {
-        String sentence = input.getStringByField("tuple");
-        Long windowId = input.getLongByField("windowId");
-        String[] words = sentence.split(" ");
+            String sentence = input.getString(0);
+            String[] words = sentence.split(" ");
 
-        for (String word : words) {
-            word = word.trim();
+            for (String word : words) {
+                word = word.trim();
 
-            if (!word.isEmpty()) {
-                word = word.toLowerCase();
-                collector.emit(new Values(word, windowId));
+                if (!word.isEmpty()) {
+                    word = word.toLowerCase();
+                    collector.emit(new Values(sentence, word));
+                }
             }
-        }
 
         collector.ack(input);
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("word", "windowId"));
+        declarer.declare(new Fields("sentence", "word"));
     }
 
 }
