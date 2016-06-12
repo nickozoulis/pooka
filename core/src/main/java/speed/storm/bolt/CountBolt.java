@@ -7,6 +7,7 @@ import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class CountBolt extends BaseRichBolt {
     private OutputCollector collector;
     private Map<String, Integer> counters;
+    private Long lastWindowId;
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
@@ -27,15 +29,24 @@ public class CountBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple input) {
         String str = input.getString(0);
+        Long windowId = input.getLongByField("windowId");
 
-        if (!counters.containsKey(str)) {
-            counters.put(str, 1);
+        if (windowId >= 0) {
+            if (!counters.containsKey(str)) {
+                counters.put(str, 1);
+            } else {
+                Integer c = counters.get(str) + 1;
+                counters.put(str, c);
+            }
         } else {
-            Integer c = counters.get(str) + 1;
-            counters.put(str, c);
+            for (Map.Entry<String, Integer> entry : counters.entrySet()) {
+                collector.emit(new Values(entry.getKey(), entry.getValue(), lastWindowId));
+            }
+            counters = new HashMap<>();
         }
 
         collector.ack(input);
+        lastWindowId = windowId;
     }
 
     @Override

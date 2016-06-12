@@ -57,4 +57,9 @@ class PookaKafkaConsumer implements Consumer {
 
         return data;
     }
+
+    @Override
+    public void remove() {
+
+    }
 }
