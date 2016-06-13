@@ -2,10 +2,7 @@ package speed.storm.bolt;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HConnection;
-import org.apache.hadoop.hbase.client.HConnectionManager;
-import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -13,6 +10,8 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
+import serving.hbase.Utils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,23 +27,22 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
     private Long windowId;
     private Set<String> rawData;
     private HConnection connection;
+    private HTable tableSpeed, tableRaw;
     private static boolean AUTO_FLUSH = false;
     private static boolean CLEAR_BUFFER_ON_FAIL = false;
-    private HTableInterface tableSpeed, tableRaw;
     private Put p;
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
 
-        Configuration config = HBaseConfiguration.create();
         try {
-            connection = HConnectionManager.createConnection(config);
-            //FIXME: Take table name from stormConf
-            tableSpeed = connection.getTable(Constants.TABLE_SPEED);
-            tableSpeed.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
+            Configuration conf = Utils.setHBaseConfig();
 
-            tableRaw = connection.getTable(Constants.MASTER_DATASET);
+            tableSpeed = new HTable(conf, Constants.TABLE_SPEED);
+            tableRaw = new HTable(conf, Constants.MASTER_DATASET);
+
+            tableSpeed.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
             tableRaw.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,17 +81,21 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         }
     }
 
-    private void writeSpeedViewToHBase(Map<String, Integer> m) throws IOException  {
+    private void writeSpeedViewToHBase(Map<String, Integer> m) throws IOException {
         p = new Put(Bytes.toBytes(windowId), windowId);
         for (Map.Entry<String, Integer> entry : m.entrySet()) {
-            p.addColumn(Bytes.toBytes("cf"), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+            System.out.println(">>>>>>>>> "+entry.getKey() + " " + entry.getValue());
+            p.addColumn(Constants.COLUMN_FAMILY_SPEED, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
         }
         tableSpeed.put(p);
     }
 
     private void writeRawToHBase(Set<String> s) throws IOException {
         for (String str : s) {
+            System.out.println(">>>>>>>>> "+str);
             p = new Put(Bytes.toBytes(str), windowId);
+            p.addColumn(Constants.COLUMN_FAMILY_MASTER_DATASET,
+                    Bytes.toBytes(""), Bytes.toBytes(""));
             tableRaw.put(p);
         }
     }
