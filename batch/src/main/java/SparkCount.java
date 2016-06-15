@@ -46,7 +46,7 @@ public class SparkCount {
 
         try {
             // Scan Speed table to get last entry's timestamp
-            Scan scan = new Scan(Bytes.toBytes(1l));
+            Scan scan = new Scan();
             scan.addFamily(Cons.COLUMN_FAMILY_SPEED.getBytes());
             scan.setReversed(true);
 
