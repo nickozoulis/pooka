@@ -5,27 +5,6 @@ dependencies {
     compile project(':core')
 }
 
-
-
-//create a single Jar with all dependencies
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-                'Implementation-Version': version,
-                'Main-Class': 'SparkCount'
-    }
-
-    baseName = project.name + '-all'
-
-    // to fix error of not building because of more tha 65535 files in jar
-    zip64 = true
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    // to fix error of corrupted jar
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
-    with jar
-}
-
 // http://www.sureshpw.com/2015/10/building-akka-bundle-with-all.html
 buildscript {
     repositories {
