@@ -60,9 +60,10 @@ public class SparkCount {
 
             // Scan Master Dataset table to start batch processing
             scan = new Scan();
-            scan.setTimeRange(1, speedLastTimestamp);
+            // +1 because upper bound is exclusive
+            scan.setTimeRange(1, speedLastTimestamp+1);
 
-            hBaseConfig.set(TableInputFormat.INPUT_TABLE, Cons.TABLE_SPEED);
+            hBaseConfig.set(TableInputFormat.INPUT_TABLE, Cons.MASTER_DATASET);
             hBaseConfig.set(TableInputFormat.SCAN, convertScanToString(scan));
 
             JavaPairRDD<ImmutableBytesWritable, Result> hbaseRDD = sc.newAPIHadoopRDD(
