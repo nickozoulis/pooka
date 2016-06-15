@@ -2,7 +2,7 @@ package serving.hbase;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import speed.storm.bolt.Constants;
+import speed.storm.bolt.Cons;
 
 /**
  * Created by nickozoulis on 13/06/2016.
@@ -15,8 +15,8 @@ public class Utils {
     public static Configuration setHBaseConfig() {
         Configuration config = HBaseConfiguration.create();
 
-        config.set("hbase.zookeeper.quorum", Constants.hbase_IP_address);
-        config.set("hbase.zookeeper.property.clientPort", Constants.hbase_port);
+        config.set("hbase.zookeeper.quorum", Cons.hbase_IP_address);
+        config.set("hbase.zookeeper.property.clientPort", Cons.hbase_port);
 
         return config;
     }

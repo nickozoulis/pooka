@@ -1,7 +1,6 @@
 package speed.storm.bolt;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.storm.task.OutputCollector;
@@ -39,8 +38,8 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         try {
             Configuration conf = Utils.setHBaseConfig();
 
-            tableSpeed = new HTable(conf, Constants.TABLE_SPEED);
-            tableRaw = new HTable(conf, Constants.MASTER_DATASET);
+            tableSpeed = new HTable(conf, Cons.TABLE_SPEED);
+            tableRaw = new HTable(conf, Cons.MASTER_DATASET);
 
             tableSpeed.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
             tableRaw.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
@@ -69,7 +68,6 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         }
 
         writeToHBase(rawData, counters);
-
     }
 
     private void writeToHBase(Set<String> s, Map<String, Integer> m) {
@@ -85,7 +83,7 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         p = new Put(Bytes.toBytes(windowId), windowId);
         for (Map.Entry<String, Integer> entry : m.entrySet()) {
             System.out.println(">>>>>>>>> "+entry.getKey() + " " + entry.getValue());
-            p.addColumn(Constants.COLUMN_FAMILY_SPEED, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+            p.addColumn(Cons.COLUMN_FAMILY_SPEED.getBytes(), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
         }
         tableSpeed.put(p);
     }
@@ -94,7 +92,7 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         for (String str : s) {
             System.out.println(">>>>>>>>> "+str);
             p = new Put(Bytes.toBytes(str), windowId);
-            p.addColumn(Constants.COLUMN_FAMILY_MASTER_DATASET,
+            p.addColumn(Cons.COLUMN_FAMILY_MASTER_DATASET.getBytes(),
                     Bytes.toBytes(""), Bytes.toBytes(""));
             tableRaw.put(p);
         }

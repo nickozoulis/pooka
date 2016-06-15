@@ -14,7 +14,13 @@ subprojects {
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
-        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.1'
-        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.1'
+        compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    }
+
+    // Issue: SLF4J: Detected both log4j-over-slf4j.jar AND slf4j-log4j12.jar on the class path, preempting StackOverflowError.
+    //        SLF4J: See also http://www.slf4j.org/codes.html#log4jDelegationLoop for more details.
+    // Solution: http://stackoverflow.com/questions/21764128/how-do-i-exclude-all-instances-of-a-transitive-dependency-when-using-gradle
+    configurations {
+        runtime.exclude group: "org.slf4j", module: "slf4j-log4j12"
     }
 }

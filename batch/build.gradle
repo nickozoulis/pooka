@@ -4,3 +4,47 @@ version '1.0-SNAPSHOT'
 dependencies {
     compile project(':core')
 }
+
+
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'SparkCount'
+    }
+
+    baseName = project.name + '-all'
+
+    // to fix error of not building because of more tha 65535 files in jar
+    zip64 = true
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    // to fix error of corrupted jar
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    with jar
+}
+
+// http://www.sureshpw.com/2015/10/building-akka-bundle-with-all.html
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
+        resource = 'reference.conf'
+    }
+    // Issue: org.apache.tools.zip.Zip64RequiredException: archive contains more than 65535 entries
+    // Solution:
+    zip64 = true
+    // And run with "java -cp" instead of "java -jar"
+
+}

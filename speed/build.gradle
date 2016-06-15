@@ -10,10 +10,12 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': version,
-                'Main-Class': 'TestMain '
+                'Main-Class': 'TestMain'
     }
     baseName = project.name + '-all'
+    zip64 = true
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     with jar
 }
 
