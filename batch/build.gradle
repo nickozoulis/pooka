@@ -25,5 +25,4 @@ shadowJar {
     // Solution:
     zip64 = true
     // And run with "java -cp" instead of "java -jar"
-
 }

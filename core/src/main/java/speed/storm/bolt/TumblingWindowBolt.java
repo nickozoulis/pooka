@@ -83,7 +83,7 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         p = new Put(Bytes.toBytes(windowId), windowId);
         for (Map.Entry<String, Integer> entry : m.entrySet()) {
             System.out.println(">>>>>>>>> "+entry.getKey() + " " + entry.getValue());
-            p.addColumn(Cons.COLUMN_FAMILY_SPEED.getBytes(), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+            p.addColumn(Cons.CF_SPEED.getBytes(), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
         }
         tableSpeed.put(p);
     }
@@ -92,7 +92,7 @@ public class TumblingWindowBolt extends BaseWindowedBolt {
         for (String str : s) {
             System.out.println(">>>>>>>>> "+str);
             p = new Put(Bytes.toBytes(str), windowId);
-            p.addColumn(Cons.COLUMN_FAMILY_MASTER_DATASET.getBytes(),
+            p.addColumn(Cons.CF_MASTER_DATASET.getBytes(),
                     Bytes.toBytes(""), Bytes.toBytes(""));
             tableRaw.put(p);
         }
