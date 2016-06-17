@@ -1,4 +1,4 @@
-package batch.spark.operators;
+package operators;
 
 import org.apache.spark.api.java.function.Function2;
 

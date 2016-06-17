@@ -1,7 +1,8 @@
 import batch.spark.PookaBatchJob;
-import batch.spark.operators.CountUrlIds;
-import batch.spark.operators.ExtractUrlIds;
-import batch.spark.operators.MapToHBaseSchema;
+
+import operators.CountUrlIds;
+import operators.ExtractUrlIds;
+import operators.MapToHBaseSchema;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.PairFunction;
 

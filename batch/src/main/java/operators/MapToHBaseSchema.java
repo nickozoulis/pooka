@@ -1,4 +1,4 @@
-package batch.spark.operators;
+package operators;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
