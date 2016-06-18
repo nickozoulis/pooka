@@ -21,17 +21,19 @@ import serving.hbase.TimestampNotFoundException;
 import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created by nickozoulis on 17/06/2016.
  */
-public abstract class PookaBatchJob {
+public abstract class PookaBatchJob implements Serializable {
+    private static final long serialVersionUID = -3258884693833351600L;
     private Long speedLastTimestamp;
-    private JavaSparkContext sc;
-    private Configuration hBaseConfig;
+    private transient JavaSparkContext sc;
+    private transient Configuration hBaseConfig;
     private JavaRDD<String> batchRDD;
 
-    public PookaBatchJob(String appName, String mode) {
+    protected PookaBatchJob(String appName, String mode) {
         SparkConf conf = new SparkConf().setAppName(appName).setMaster(mode);
         sc = new JavaSparkContext(conf);
 
@@ -44,6 +46,7 @@ public abstract class PookaBatchJob {
             speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
 
             batchRDD = loadBatchRDD();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +77,8 @@ public abstract class PookaBatchJob {
                 hBaseConfig, TableInputFormat.class, ImmutableBytesWritable.class, Result.class);
 
         JavaRDD<String> batchRDD = hbaseRDD.map(new Function<Tuple2<ImmutableBytesWritable, Result>, String>() {
-            private static final long serialVersionUID = -2021713021648730786L;
+
+            private static final long serialVersionUID = -3235652957685819359L;
 
             public String call(Tuple2<ImmutableBytesWritable, Result> tuple) throws Exception {
                 String s = null;

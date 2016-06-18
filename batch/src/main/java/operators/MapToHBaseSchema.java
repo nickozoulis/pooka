@@ -11,6 +11,7 @@ import speed.storm.bolt.Cons;
  * Created by nickozoulis on 17/06/2016.
  */
 public class MapToHBaseSchema implements PairFunction<Tuple2<String, Integer>, ImmutableBytesWritable, Put> {
+    private static final long serialVersionUID = -85397573524059845L;
     private final Long batchTimestamp;
 
     public MapToHBaseSchema(Long batchTimestamp) {
