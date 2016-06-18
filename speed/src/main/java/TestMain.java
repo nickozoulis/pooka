@@ -5,7 +5,7 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import speed.storm.bolt.SplitBolt;
-import speed.storm.bolt.TumblingWindowBolt;
+import speed.storm.bolt.PookaTumblingWindowBolt;
 import speed.storm.spout.PookaKafkaCoreSpout;
 
 import java.util.Properties;
@@ -30,7 +30,7 @@ public class TestMain {
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaCoreSpout(p).getSpout());
         builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new TumblingWindowBolt()
+        builder.setBolt("word-counter", new SpeedUrlCount()
                 .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
                 .fieldsGrouping("word-spitter", new Fields("word"));
 

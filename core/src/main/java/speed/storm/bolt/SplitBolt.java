@@ -9,12 +9,14 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by nickozoulis on 11/06/2016.
  */
-public class SplitBolt extends BaseRichBolt {
+public class SplitBolt extends BaseRichBolt implements Serializable {
+    private static final long serialVersionUID = -2784425596889772745L;
     private OutputCollector collector;
 
     @Override

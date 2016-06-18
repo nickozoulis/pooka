@@ -10,7 +10,6 @@ import java.io.Serializable;
  * Created by nickozoulis on 17/06/2016.
  */
 public class BatchUrlCount extends PookaBatchJob implements Serializable {
-
     private static final long serialVersionUID = 7733556521224817301L;
 
     public BatchUrlCount(String appName, String mode) {
