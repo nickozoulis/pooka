@@ -11,14 +11,14 @@ import java.util.UUID;
 /**
  * Created by nickozoulis on 10/06/2016.
  */
-public class PookaKafkaCoreSpout implements SpoutClient<KafkaSpout> {
+public class PookaKafkaSpout implements SpoutClient<KafkaSpout> {
     /*
         KafkaSpout is our spout implementation, which will integrate with Storm. It fetches the mes-sages from kafka
         topic and emits it into Storm ecosystem as tuples. KafkaSpout get its config-uration details from SpoutConfig.
      */
     private KafkaSpout kafkaSpout;
 
-    public PookaKafkaCoreSpout(Properties properties) {
+    public PookaKafkaSpout(Properties properties) {
         /*
             BrokerHosts is an interface and ZkHosts and StaticHosts are its two main implementations.
             ZkHosts is used to track the Kafka brokers dynamically by maintaining the details in ZooKeeper

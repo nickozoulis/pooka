@@ -2,21 +2,16 @@ package speed.storm.bolt;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
-import org.apache.storm.tuple.Tuple;
 import org.apache.storm.windowing.TupleWindow;
 import serving.hbase.Utils;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+
 
 /**
  * Created by nickozoulis on 12/06/2016.

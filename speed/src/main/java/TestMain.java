@@ -4,7 +4,7 @@ import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
-import speed.storm.spout.PookaKafkaCoreSpout;
+import speed.storm.spout.PookaKafkaSpout;
 
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +26,7 @@ public class TestMain {
         p.put("zkNamespace", "test_kafka");
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-spout", new PookaKafkaCoreSpout(p).getSpout());
+        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
         builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
         builder.setBolt("word-counter", new SpeedUrlCount()
                 .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))

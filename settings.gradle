@@ -3,4 +3,5 @@ include 'core'
 include 'batch'
 include 'speed'
 include 'source-sim'
+include 'serving'
 
