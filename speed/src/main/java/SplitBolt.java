@@ -1,6 +1,3 @@
-package speed.storm.bolt;
-
-
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
