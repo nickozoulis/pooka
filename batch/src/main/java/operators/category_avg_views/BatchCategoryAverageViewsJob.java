@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Created by nickozoulis on 19/06/2016.
  */
 public class BatchCategoryAverageViewsJob extends PookaBatchJob implements Serializable {
+    private static final long serialVersionUID = 4478393882397153293L;
 
     public BatchCategoryAverageViewsJob(String appName, String mode) {
         super(appName, mode, new CategoryViewsMapper());

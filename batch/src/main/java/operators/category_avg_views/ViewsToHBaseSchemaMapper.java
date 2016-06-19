@@ -11,6 +11,7 @@ import speed.storm.bolt.Cons;
  * Created by nickozoulis on 19/06/2016.
  */
 public class ViewsToHBaseSchemaMapper implements PairFunction<Tuple2<String, Views>, ImmutableBytesWritable, Put> {
+    private static final long serialVersionUID = -4730771052585092417L;
     private final Long batchTimestamp;
 
     public ViewsToHBaseSchemaMapper(Long batchTimestamp) {
