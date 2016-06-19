@@ -1,7 +1,9 @@
 # pooka
-<h4 align="center">
+<h5 align="center">
  Summer 2016, Master Thesis, University of Glasgow
-</h4>
+ <br/>
+ A flexible implementation framework for the Lambda architecture
+</h5>
 <p align="center">
   <img src="https://github.com/nickozoulis/pooka/blob/master/pooka.png?raw=true" alt="Pooka's image"/>
 </p>
