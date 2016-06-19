@@ -1,4 +1,4 @@
-package operators.category_views;
+package operators.category_videos;
 
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;

@@ -1,4 +1,4 @@
-package operators.category_views;
+package operators.category_videos;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -15,7 +15,7 @@ public class CategoryMapper implements Function<Tuple2<ImmutableBytesWritable, R
     private static final long serialVersionUID = 5238167321935796661L;
 
     public String call(Tuple2<ImmutableBytesWritable, Result> tuple) throws Exception {
-        String s = null;
+        String s;
         try {
             Result result = tuple._2;
 

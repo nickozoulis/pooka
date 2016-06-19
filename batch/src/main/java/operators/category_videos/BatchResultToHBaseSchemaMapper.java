@@ -1,4 +1,4 @@
-package operators.category_views;
+package operators.category_videos;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;

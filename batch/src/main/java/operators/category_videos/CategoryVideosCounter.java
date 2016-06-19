@@ -1,11 +1,11 @@
-package operators.category_views;
+package operators.category_videos;
 
 import org.apache.spark.api.java.function.Function2;
 
 /**
  * Created by nickozoulis on 17/06/2016.
  */
-public class CategoryViewsCounter implements Function2<Integer, Integer, Integer>  {
+public class CategoryVideosCounter implements Function2<Integer, Integer, Integer>  {
     private static final long serialVersionUID = 5727265988727618530L;
 
     @Override
