@@ -8,7 +8,6 @@ import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
 import org.apache.hadoop.hbase.protobuf.ProtobufUtil;
 import org.apache.hadoop.hbase.protobuf.generated.ClientProtos;
 import org.apache.hadoop.hbase.util.Base64;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -16,7 +15,6 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
-import scala.Tuple2;
 import serving.hbase.TimestampNotFoundException;
 import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
@@ -33,7 +31,7 @@ public abstract class PookaBatchJob implements Serializable {
     private transient Configuration hBaseConfig;
     private JavaRDD<String> batchRDD;
 
-    protected PookaBatchJob(String appName, String mode) {
+    protected PookaBatchJob(String appName, String mode, Function hbaseMapper) {
         SparkConf conf = new SparkConf().setAppName(appName).setMaster(mode);
         sc = new JavaSparkContext(conf);
 
@@ -45,7 +43,7 @@ public abstract class PookaBatchJob implements Serializable {
             // Get most recent timestamp from speed views
             speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
 
-            batchRDD = loadBatchRDD();
+            batchRDD = loadBatchRDD(hbaseMapper);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +63,7 @@ public abstract class PookaBatchJob implements Serializable {
 
     public abstract PairFunction hbaseSchemaAdapter();
 
-    private JavaRDD<String> loadBatchRDD() throws IOException {
+    private JavaRDD<String> loadBatchRDD(Function hbaseMapper) throws IOException {
         // Scan master dataset table to start batch processing
         Scan scan = new Scan();
         scan.setTimeRange(1, speedLastTimestamp + 1);   // +1 because upper bound is exclusive
@@ -76,24 +74,7 @@ public abstract class PookaBatchJob implements Serializable {
         JavaPairRDD<ImmutableBytesWritable, Result> hbaseRDD = sc.newAPIHadoopRDD(
                 hBaseConfig, TableInputFormat.class, ImmutableBytesWritable.class, Result.class);
 
-        JavaRDD<String> batchRDD = hbaseRDD.map(new Function<Tuple2<ImmutableBytesWritable, Result>, String>() {
-
-            private static final long serialVersionUID = -3235652957685819359L;
-
-            public String call(Tuple2<ImmutableBytesWritable, Result> tuple) throws Exception {
-                String s = null;
-                try {
-                    Result result = tuple._2;
-
-                    s = Bytes.toString(result.getRow());
-
-                    return s;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        });
+        JavaRDD batchRDD = hbaseRDD.map(hbaseMapper);
 
         return batchRDD;
     }
