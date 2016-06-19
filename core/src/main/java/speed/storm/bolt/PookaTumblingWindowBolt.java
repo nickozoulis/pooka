@@ -43,9 +43,8 @@ public abstract class PookaTumblingWindowBolt extends BaseWindowedBolt implement
     @Override
     public abstract void execute(TupleWindow inputWindow);
 
-    public abstract void writeSpeedViewToHBase() throws IOException;
 
-    public abstract void writeRawToHBase() throws IOException;
+    public abstract void writeToHBase();
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

@@ -1,6 +1,5 @@
 import source.kafka.KafkaProducerFactory;
 import source.kafka.IProducer;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class Main {
 
         Properties properties = new Properties();
         properties.setProperty("topic", args[0]);
-        
+
         KafkaProducerFactory factory = new KafkaProducerFactory(properties);
         IProducer producer = factory.getProducer();
 

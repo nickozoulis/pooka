@@ -7,13 +7,9 @@ public class Cons {
     public static final String TABLE_SPEED = "speed_views";
     public static final String MASTER_DATASET = "master_dataset";
     public static final String TABLE_BATCH = "batch_views";
-    public static final String CF_SPEED = "v";
-    public static final String CF_MASTER_DATASET = "m";
-    public static final String CF_BATCH = "b";
-    public static final byte[] COLUMN_COLOR = "COLOR".getBytes();
-    public static final byte[] COLUMN_COUNT = "COUNT".getBytes();
+    public static final String CF_VIEWS = "v";
+    public static final String CF_MASTER_DATASET_INFO = "i";
+    public static final String CF_MASTER_DATASET_OTHER = "o";
     public static final String hbase_IP_address = "127.0.0.1";
     public static final String hbase_port = "2181";
-    public static final boolean AUTO_FLUSH = false;
-    public static final boolean CLEAR_BUFFER_ON_FAIL = false;
 }

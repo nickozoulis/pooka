@@ -20,4 +20,9 @@ public class Utils {
 
         return config;
     }
+
+    public static void setHBaseSchema() {
+
+    }
+
 }
