@@ -22,8 +22,8 @@ public class TestMain {
 
         Properties p = new Properties();
         p.put("zkConnString", "localhost:2181");
-        p.put("topic", "test");
-        p.put("zkNamespace", "test_kafka");
+        p.put("topic", "youtube");
+        p.put("zkNamespace", "youtube_kafka");
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
