@@ -87,7 +87,7 @@ public class CountViewsPerCategory extends PookaTumblingWindowBolt implements Se
     public void writeSpeedViewToHBase() throws IOException {
         Put p = new Put(Bytes.toBytes(windowId), windowId);
         for (Map.Entry<String, Integer> entry : counters.entrySet()) {
-            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes(entry.getKey()), toBytes(entry.getValue()));
+            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes("count_" + entry.getKey()), toBytes(entry.getValue()));
         }
         getTableSpeed().put(p);
     }
