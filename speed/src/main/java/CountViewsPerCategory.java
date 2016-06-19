@@ -55,11 +55,11 @@ public class CountViewsPerCategory extends PookaTumblingWindowBolt implements Se
                             field.equals("views") ||
                             field.equals("ratings") ||
                             field.equals("comments")) {
-                        value = toBytes(tuple.getIntegerByField((field)));
+                        value = toBytes(Integer.parseInt(tuple.getStringByField((field))));
                     } else if (field.equals("category")) {
                         value = toBytes(tuple.getStringByField(field));
                     } else if (field.equals("rate")) {
-                        value = toBytes(tuple.getLongByField(field));
+                        value = toBytes(Double.parseDouble(tuple.getStringByField(field)));
                     } else { // uploader, relatedIds
                         cf = Cons.CF_MASTER_DATASET_OTHER.getBytes();
                         value = toBytes(tuple.getStringByField(field));
@@ -101,7 +101,7 @@ public class CountViewsPerCategory extends PookaTumblingWindowBolt implements Se
         return Bytes.toBytes(b);
     }
 
-    private byte[] toBytes(Long b) {
+    private byte[] toBytes(Double b) {
         return Bytes.toBytes(b);
     }
 }
