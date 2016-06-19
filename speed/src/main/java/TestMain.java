@@ -30,7 +30,7 @@ public class TestMain {
         builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
         builder.setBolt("word-counter", new CountViewsPerCategory()
                 .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
-                .fieldsGrouping("word-spitter", new Fields("word"));
+                .shuffleGrouping("word-spitter");
 
 
         LocalCluster cluster = new LocalCluster();
