@@ -4,6 +4,7 @@ import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
+import speed.storm.bolt.Cons;
 import speed.storm.spout.PookaKafkaSpout;
 
 import java.util.Properties;

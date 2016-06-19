@@ -15,10 +15,19 @@ public class Main {
             System.exit(0);
         }
 
-        Properties properties = new Properties();
-        properties.setProperty("topic", args[0]);
+        Properties p = new Properties();
+        p.put("bootstrap.servers", "localhost:9092"); // Assign localhost id
+        p.put("acks", "all");  // Set acknowledgements for producer requests.
+        p.put("retries", 0);    // If the request fails, the producer can automatically retry
+        p.put("batch.size", 16384); // Specify buffer size in config
+        // The buffer.memory controls the total amount of memory available to the producer for buffering.
+        p.put("buffer.memory", 33554432);
+        p.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        p.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-        KafkaProducerFactory factory = new KafkaProducerFactory(properties);
+        p.setProperty("topic", args[0]);
+
+        KafkaProducerFactory factory = new KafkaProducerFactory(p);
         IProducer producer = factory.getProducer();
 
         BufferedReader br = null;

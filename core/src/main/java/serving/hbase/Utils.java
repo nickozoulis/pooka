@@ -15,8 +15,8 @@ public class Utils {
     public static Configuration setHBaseConfig() {
         Configuration config = HBaseConfiguration.create();
 
-        config.set("hbase.zookeeper.quorum", Cons.hbase_IP_address);
-        config.set("hbase.zookeeper.property.clientPort", Cons.hbase_port);
+        config.set("hbase.zookeeper.quorum", Cons.localhost);
+        config.set("hbase.zookeeper.property.clientPort", Cons.zk_port);
 
         return config;
     }

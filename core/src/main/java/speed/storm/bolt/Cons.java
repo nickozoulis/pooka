@@ -10,6 +10,6 @@ public class Cons {
     public static final String CF_VIEWS = "v";
     public static final String CF_MASTER_DATASET_INFO = "i";
     public static final String CF_MASTER_DATASET_OTHER = "o";
-    public static final String hbase_IP_address = "127.0.0.1";
-    public static final String hbase_port = "2181";
+    public static final String localhost = "127.0.0.1";
+    public static final String zk_port = "2181";
 }

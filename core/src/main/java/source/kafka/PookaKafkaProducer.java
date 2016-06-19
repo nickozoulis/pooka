@@ -3,6 +3,8 @@ package source.kafka;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import speed.storm.bolt.Cons;
+
 import java.util.Properties;
 
 /**

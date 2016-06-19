@@ -115,7 +115,7 @@ public abstract class PookaBatchJob implements Serializable {
 
         // Scan Speed table to get last entry's timestamp
         Scan scan = new Scan();
-        scan.addFamily(Cons.CF_SPEED.getBytes());
+        scan.addFamily(Cons.CF_VIEWS.getBytes());
         scan.setReversed(true);
 
         ResultScanner rs = tableSpeed.getScanner(scan);
