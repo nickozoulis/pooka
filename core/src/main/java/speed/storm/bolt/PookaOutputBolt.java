@@ -2,6 +2,7 @@ package speed.storm.bolt;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Put;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -12,14 +13,16 @@ import speed.storm.PookaView;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by nickozoulis on 20/06/2016.
  */
 public abstract class PookaOutputBolt extends BaseRichBolt implements Serializable {
-    protected Map<Long, PookaView> views;
-    protected OutputCollector collector;
+    private Map<Long, PookaView> views;
+    private Map<Long, List<Put>> rawPuts;
+    private OutputCollector collector;
     private HTable tableSpeed, tableRaw;
     private static boolean AUTO_FLUSH = false;
     private static boolean CLEAR_BUFFER_ON_FAIL = false;
@@ -36,6 +39,7 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
             tableRaw.setAutoFlush(AUTO_FLUSH, CLEAR_BUFFER_ON_FAIL);
 
             setViews(new HashMap<Long, PookaView>());
+            setRawPuts(new HashMap<Long, List<Put>>());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,5 +85,13 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
 
     protected HTable getTableRaw() {
         return this.tableRaw;
+    }
+
+    public Map<Long, List<Put>> getRawPuts() {
+        return rawPuts;
+    }
+
+    public void setRawPuts(Map<Long, List<Put>> rawPuts) {
+        this.rawPuts = rawPuts;
     }
 }
