@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class SSplitBolt extends PookaInputBolt implements Serializable {
+public class NewSplitBolt extends PookaInputBolt implements Serializable {
     private static final long serialVersionUID = 6110091644242967354L;
 
     @Override
@@ -43,10 +43,7 @@ public class SSplitBolt extends PookaInputBolt implements Serializable {
                     true));
         }
         // Special msg indicate end of window
-        getCollector().emit(new Values(
-                getTimestamp(),
-                "", "", 0, "", 0, 0, 0, "", "", false
-        ));
+        getCollector().emit(new Values(getTimestamp(), "", "", 0, "", 0, 0, 0, 0, "", "", false));
     }
 
     @Override

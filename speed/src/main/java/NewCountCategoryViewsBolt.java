@@ -5,12 +5,13 @@ import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
+public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
     private static final long serialVersionUID = -3814974326725789289L;
     private Long timestamp;
 
@@ -24,6 +25,7 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
 
             if (!getViews().containsKey(timestamp)) {
                 getViews().put(timestamp, new MyView(getTableSpeed(), getTableRaw()));
+                getRawPuts().put(timestamp, new ArrayList<Put>());
             }
 
             ((MyView) getViews().get(timestamp)).process(category);
@@ -36,8 +38,8 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
 
     private void flush(Long timestamp) {
         try {
-            writeSpeedViewToHBase(timestamp);
             getTableRaw().put(getRawPuts().get(timestamp));
+            writeSpeedViewToHBase(timestamp);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,6 +73,8 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
                         value = toBytes(tuple.getStringByField(field));
                     } else if (field.equals("rate")) {
                         value = toBytes(Double.parseDouble(tuple.getStringByField(field)));
+                    } else if (field.equals("flag") || field.equals("timestamp")) {
+                        continue;
                     } else { // uploader, relatedIds
                         cf = Cons.CF_MASTER_DATASET_OTHER.getBytes();
                         value = toBytes(tuple.getStringByField(field));
