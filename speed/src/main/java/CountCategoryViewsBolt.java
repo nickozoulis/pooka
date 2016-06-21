@@ -3,7 +3,6 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.storm.tuple.Tuple;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -12,7 +11,7 @@ import java.util.Map;
  * Created by nickozoulis on 20/06/2016.
  */
 public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
-
+    private static final long serialVersionUID = -3814974326725789289L;
     private Long timestamp;
 
     @Override
@@ -60,8 +59,8 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
             byte[] value;
             for (String field : tuple.getFields()) {
                 if (!field.equals("videoId")) {
-
                     cf = Cons.CF_MASTER_DATASET_INFO.getBytes();
+
                     if (field.equals("age") ||
                             field.equals("length") ||
                             field.equals("views") ||

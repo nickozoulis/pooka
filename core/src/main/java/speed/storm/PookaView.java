@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class PookaView implements Serializable {
 
+    private static final long serialVersionUID = -847248015297507549L;
     private HTable tableSpeed, tableRaw;
 
     public PookaView(HTable tableSpeed, HTable tableRaw) {

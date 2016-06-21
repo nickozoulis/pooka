@@ -28,10 +28,11 @@ public class TestMain {
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
-        builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new CountViewsPerCategory()
+        builder.setBolt("word-spitter", new SSplitBolt()
                 .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
-                .fieldsGrouping("word-spitter", new Fields("category"));
+                .shuffleGrouping("kafka-spout");
+        builder.setBolt("word-counter", new CountViewsPerCategory())
+                .fieldsGrouping("word-spitter", new Fields("timestamp"));
 
 
         LocalCluster cluster = new LocalCluster();

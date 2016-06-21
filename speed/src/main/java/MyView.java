@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class MyView extends PookaView implements Serializable {
 
+    private static final long serialVersionUID = -8448977864355211360L;
     private Map<String, Integer> views;
 
 
