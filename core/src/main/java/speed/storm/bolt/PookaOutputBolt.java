@@ -9,6 +9,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 import serving.hbase.Utils;
+import speed.storm.PookaBundle;
 import speed.storm.PookaView;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,6 +28,13 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     private HTable tableSpeed, tableRaw;
     private static boolean AUTO_FLUSH = false;
     private static boolean CLEAR_BUFFER_ON_FAIL = false;
+    private final int numOfInputBolts;
+    private PookaBundle pookaBundle;
+
+    public PookaOutputBolt(int numOfInputBolts) {
+        this.numOfInputBolts = numOfInputBolts;
+        setPookaBundle(new PookaBundle(numOfInputBolts));
+    }
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
@@ -94,5 +102,17 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
 
     public void setRawPuts(Map<Long, List<Put>> rawPuts) {
         this.rawPuts = rawPuts;
+    }
+
+    public int getNumOfInputBolts() {
+        return numOfInputBolts;
+    }
+
+    public PookaBundle getPookaBundle() {
+        return pookaBundle;
+    }
+
+    public void setPookaBundle(PookaBundle pookaBundle) {
+        this.pookaBundle = pookaBundle;
     }
 }

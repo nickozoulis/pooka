@@ -13,10 +13,12 @@ import java.io.Serializable;
 public class NewSplitBolt extends PookaInputBolt implements Serializable {
     private static final long serialVersionUID = 6110091644242967354L;
 
+    public NewSplitBolt(Long window) {
+        super(window);
+    }
+
     @Override
     public void execute(TupleWindow inputWindow) {
-        setTimestamp(System.currentTimeMillis());
-
         for (Tuple input : inputWindow.get()) {
             String sentence = input.getString(0);
             String[] words = sentence.split("\\t");
@@ -27,9 +29,8 @@ public class NewSplitBolt extends PookaInputBolt implements Serializable {
                 relatedIds += words[i] + " ";
             }
 
-
             getCollector().emit(new Values(
-                    getTimestamp(),
+                    getWindow(),
                     words[0],
                     words[1],
                     words[2],
@@ -40,16 +41,17 @@ public class NewSplitBolt extends PookaInputBolt implements Serializable {
                     words[7],
                     words[8],
                     relatedIds.trim(),
-                    true));
+                    false));
         }
         // Special msg indicate end of window
-        getCollector().emit(new Values(getTimestamp(), "", "", 0, "", 0, 0, 0, 0, "", "", false));
+        getCollector().emit(new Values(getWindow(), "", "", 0, "", 0, 0, 0, 0, "", "", true));
+        incrementWindow();
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(
-                "timestamp",
+                "window",
                 "videoId",
                 "uploader",
                 "age",
@@ -60,6 +62,6 @@ public class NewSplitBolt extends PookaInputBolt implements Serializable {
                 "ratings",
                 "comments",
                 "relatedIds",
-                "flag"));
+                "ack"));
     }
 }

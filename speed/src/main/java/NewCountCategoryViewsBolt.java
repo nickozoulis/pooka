@@ -13,27 +13,34 @@ import java.util.Map;
  */
 public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
     private static final long serialVersionUID = -3814974326725789289L;
-    private Long timestamp;
+    private Long window;
+
+    public NewCountCategoryViewsBolt(int numOfInputBolts) {
+        super(numOfInputBolts);
+    }
 
     @Override
     public void execute(Tuple input) {
-        timestamp = input.getLongByField("timestamp");
+        window = input.getLongByField("window");
 
         String category;
-        if (input.getBooleanByField("flag")) {
+        if (!input.getBooleanByField("ack")) {
             category = input.getStringByField("category");
 
-            if (!getViews().containsKey(timestamp)) {
-                getViews().put(timestamp, new MyView(getTableSpeed(), getTableRaw()));
-                getRawPuts().put(timestamp, new ArrayList<Put>());
+            if (!getViews().containsKey(window)) {
+                getViews().put(window, new MyView(getTableSpeed(), getTableRaw()));
+                getRawPuts().put(window, new ArrayList<Put>());
             }
 
-            ((MyView) getViews().get(timestamp)).process(category);
+            ((MyView) getViews().get(window)).process(category);
             addRawPut(input);
         } else {
-            flush(timestamp);
-            getViews().remove(timestamp);
+            processAck(window);
         }
+    }
+
+    private void processAck(Long window) {
+        getPookaBundle().processAck(window);
     }
 
     private void flush(Long timestamp) {
@@ -55,7 +62,7 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
 
     private void addRawPut(Tuple tuple) {
         try {
-            Put p = new Put(toBytes(tuple.getStringByField("videoId")), timestamp);
+            Put p = new Put(toBytes(tuple.getStringByField("videoId")), window);
 
             byte[] cf;
             byte[] value;
@@ -73,7 +80,7 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
                         value = toBytes(tuple.getStringByField(field));
                     } else if (field.equals("rate")) {
                         value = toBytes(Double.parseDouble(tuple.getStringByField(field)));
-                    } else if (field.equals("flag") || field.equals("timestamp")) {
+                    } else if (field.equals("ack") || field.equals("window")) {
                         continue;
                     } else { // uploader, relatedIds
                         cf = Cons.CF_MASTER_DATASET_OTHER.getBytes();
@@ -84,7 +91,7 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
                 }
             }
 
-            getRawPuts().get(timestamp).add(p);
+            getRawPuts().get(window).add(p);
         } catch (Exception e) {
             e.printStackTrace();
         }

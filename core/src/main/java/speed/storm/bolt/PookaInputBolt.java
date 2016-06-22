@@ -15,7 +15,11 @@ import java.util.Map;
 public abstract class PookaInputBolt extends BaseWindowedBolt implements Serializable {
     private static final long serialVersionUID = -2268993895150431399L;
     private OutputCollector collector;
-    private Long timestamp;
+    private Long window;
+
+    public PookaInputBolt(Long window) {
+        this.window = window;
+    }
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
@@ -28,14 +32,15 @@ public abstract class PookaInputBolt extends BaseWindowedBolt implements Seriali
     @Override
     public abstract void declareOutputFields(OutputFieldsDeclarer declarer);
 
+    public void incrementWindow() {
+        this.window++;
+    }
+
     protected OutputCollector getCollector() {
         return this.collector;
     }
-    protected Long getTimestamp() {
-        return this.timestamp;
-    }
-    protected void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    public Long getWindow() {
+        return window;
     }
 
 }
