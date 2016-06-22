@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by nickozoulis on 20/06/2016.
  */
 public class NewSplitBolt extends PookaInputBolt implements Serializable {
-    private static final long serialVersionUID = 6110091644242967354L;
+    private static final long serialVersionUID = -9056231194989007924L;
 
     public NewSplitBolt(Long window) {
         super(window);

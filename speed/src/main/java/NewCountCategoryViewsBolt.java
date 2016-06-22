@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by nickozoulis on 20/06/2016.
  */
 public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
-    private static final long serialVersionUID = -3814974326725789289L;
+    private static final long serialVersionUID = -1158550217238014753L;
     private Long window;
 
     public NewCountCategoryViewsBolt(int numOfInputBolts) {
@@ -37,6 +37,7 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
             Put p = createPutFromTuple(input);
             getPookaBundle().getRawPuts().get(window).add(p);
         } else {
+            // If all window bolts sent their data, proceed to flush.
             if (getPookaBundle().processAck(window)) {
                 flush(window);
             }
@@ -83,20 +84,22 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
             // Write raw data to master dataset in HBase.
             getTableRaw().put(getPookaBundle().getRawPuts().get(window));
             // Write speed views to speed view table in HBase.
-            writeSpeedViewToHBase(window);
+            getTableSpeed().put(createPutFromView(window));
+            // Remove data from bundle to release memory
+            getPookaBundle().removeFromBundle(window);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void writeSpeedViewToHBase(Long window) throws IOException {
+    private Put createPutFromView(Long window) throws IOException {
         Put p = new Put(Bytes.toBytes(window), window);
 
         Map<String, Integer> m = getPookaBundle().getViewMap().get(window).getView();
         for (Map.Entry<String, Integer> entry : m.entrySet()) {
             p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes("count_" + entry.getKey()), toBytes(entry.getValue()));
         }
-        getTableSpeed().put(p);
+        return p;
     }
 
 }

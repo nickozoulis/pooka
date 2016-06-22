@@ -8,10 +8,8 @@ import java.util.Map;
  * Created by nickozoulis on 20/06/2016.
  */
 public class MyView implements PookaView<String, Integer>, Serializable {
-
-    private static final long serialVersionUID = -8448977864355211360L;
+    private static final long serialVersionUID = -899854871055918800L;
     private Map<String, Integer> views;
-
 
     public MyView() {
         this.views = new HashMap<>();

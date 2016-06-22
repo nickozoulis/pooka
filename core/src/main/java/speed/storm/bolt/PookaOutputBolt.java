@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by nickozoulis on 20/06/2016.
  */
 public abstract class PookaOutputBolt extends BaseRichBolt implements Serializable {
-    private static final long serialVersionUID = 5897481848220051413L;
+    private static final long serialVersionUID = 93955065037014054L;
     private OutputCollector collector;
     private final int numOfInputBolts;
     private PookaBundle pookaBundle;
