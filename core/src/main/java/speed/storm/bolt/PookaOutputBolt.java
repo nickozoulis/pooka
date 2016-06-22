@@ -22,8 +22,10 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     private final int numOfInputBolts;
     private PookaBundle pookaBundle;
     private transient HTable tableSpeed, tableRaw;
-    private static boolean AUTO_FLUSH = false;
-    private static boolean CLEAR_BUFFER_ON_FAIL = false;
+    private boolean AUTO_FLUSH = false;
+    private boolean CLEAR_BUFFER_ON_FAIL = false;
+    // For monitoring purpose
+    protected int TASK_ID;
 
     public PookaOutputBolt(int numOfInputBolts) {
         this.numOfInputBolts = numOfInputBolts;
@@ -31,6 +33,7 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+        TASK_ID = context.getThisTaskId();
         try {
             Configuration conf = Utils.setHBaseConfig();
 

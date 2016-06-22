@@ -5,6 +5,7 @@ import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
+import serving.hbase.Utils;
 import speed.storm.spout.PookaKafkaSpout;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ public class Main {
         // k = Num of input (window) bolts, n = Num of output (flush) bolts
         // k << n
         int k, n, t;
-        if (args.length == 2) {
+        if (args.length == 3) {
             k = Integer.parseInt(args[0]);
             n = Integer.parseInt(args[1]);
             t = Integer.parseInt(args[2]);
@@ -29,6 +30,9 @@ public class Main {
             n = 1;
             t = 1;
         }
+
+        Utils.deleteAllSchemaTables();
+        Utils.createAllSchemaTables();
 
         Config conf = new Config();
 //        conf.setNumWorkers(1);

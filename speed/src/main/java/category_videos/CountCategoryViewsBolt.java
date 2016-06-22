@@ -2,7 +2,9 @@ package category_videos;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
 import org.apache.storm.tuple.Tuple;
+import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.Map;
  * Created by nickozoulis on 20/06/2016.
  */
 public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
+    private static final Logger logger = Logger.getLogger(CountCategoryViewsBolt.class);
     private static final long serialVersionUID = -1158550217238014753L;
     private Long window;
 
@@ -28,21 +31,27 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
 
         String category;
         if (!input.getBooleanByField("ack")) {
+            logger.info("Received normal tuple");
             category = input.getStringByField("category");
 
             if (!getPookaBundle().getViewMap().containsKey(window)) {
+                logger.info("Initialising PookaBundle structures for window: " + window);
                 getPookaBundle().getViewMap().put(window, new CustomView());
                 getPookaBundle().getRawPuts().put(window, new ArrayList<Put>());
                 getPookaBundle().getAcks().put(window, 0);
             }
 
             ((CustomView) getPookaBundle().getViewMap().get(window)).process(category);
+            logger.info("Processed tuple for speed view");
 
             Put p = createPutFromTuple(input);
             getPookaBundle().getRawPuts().get(window).add(p);
+            logger.info("Tuple appended to raw puts");
         } else {
+            logger.info("Received ack tuple");
             // If all window bolts have sent their data, proceed to flush.
             if (getPookaBundle().processAck(window)) {
+                logger.info("All " + getNumOfInputBolts() + " ack tuples gathered for window with ID: " + window);
                 flush(window);
             }
         }
@@ -84,15 +93,19 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
     }
 
     private void flush(Long window) {
+        logger.info("Flushing task: " + TASK_ID + ", window: " + window);
         try {
             // Write raw data to master dataset in HBase.
             List<Put> p = getPookaBundle().getRawPuts().get(window);
-            System.out.println(">>>>>>>>><<<<<<<< " + p.size());
+            logger.info("The size of raw tuples to be flushed to master dataset is : " + p.size());
             getTableRaw().put(p);
+            logger.info("Flushed raw tuples to HBase");
             // Write speed views to speed view table in HBase.
             getTableSpeed().put(createPutFromView(window));
+            logger.info("Flushed speed views to HBase");
             // Remove data from bundle to release memory
             getPookaBundle().removeFromBundle(window);
+            logger.info("Removed PookaView and auxiliary data from memory");
         } catch (IOException e) {
             e.printStackTrace();
         }
