@@ -27,6 +27,8 @@ public class PookaBundle implements Serializable {
     }
 
     public boolean processAck(Long window) {
+        if (!viewMap.containsKey(window)) return false;
+
         logger.info("Processing ack tuple of window: " + window);
         acks.put(window, acks.get(window) + 1);
         logger.info("Total acks: " + acks.get(window));

@@ -47,15 +47,19 @@ public class Main {
         // Initial value of the window that all input bolts will be fed with.
         final Long initWindow = System.currentTimeMillis();
 
+//        TopologyBuilder builder = new TopologyBuilder();
+//        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
+//        builder.setBolt("word-spitter", new SplitBolt(initWindow))
+//                .setNumTasks(k)
+//                .shuffleGrouping("kafka-spout");
+//        builder.setBolt("word-counter", new CountCategoryViewsBolt(k))
+//                .setNumTasks(n)
+//                .fieldsGrouping("word-spitter", new Fields("window"));
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
-        builder.setBolt("word-spitter", new SplitBolt(initWindow)
-                .withTumblingWindow(new BaseWindowedBolt.Duration(t, TimeUnit.SECONDS)))
-                .setNumTasks(k)
+        builder.setBolt("word-spitter", new TempBolt())
                 .shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new CountCategoryViewsBolt(k))
-                .setNumTasks(n)
-                .fieldsGrouping("word-spitter", new Fields("window"));
+
 
 
         LocalCluster cluster = new LocalCluster();

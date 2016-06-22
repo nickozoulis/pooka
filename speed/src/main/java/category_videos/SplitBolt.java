@@ -23,9 +23,13 @@ public class SplitBolt extends PookaInputBolt implements Serializable {
     }
 
     @Override
-    public void execute(TupleWindow inputWindow) {
-        logger.info("Size of input window [" + getWindow() + "]: " + inputWindow.get().size());
-        for (Tuple input : inputWindow.get()) {
+    public void execute(Tuple input) {
+        if (isTickTuple(input)) {
+            // Special msg indicate end of window
+            logger.info("Emitting ack tuple for window: " + getWindow());
+            getCollector().emit(new Values(getWindow(), "", "", 0, "", 0, 0, 0, 0, "", "", true));
+            incrementWindow();
+        } else {
             String sentence = input.getString(0);
             String[] words = sentence.split("\\t");
 
@@ -50,10 +54,7 @@ public class SplitBolt extends PookaInputBolt implements Serializable {
                     false));
             logger.info("Emitting tuple: " + words[3] + " for window " + getWindow());
         }
-        // Special msg indicate end of window
-        logger.info("Emitting ack tuple for window: " + getWindow());
-        getCollector().emit(new Values(getWindow(), "", "", 0, "", 0, 0, 0, 0, "", "", true));
-        incrementWindow();
+
     }
 
     @Override

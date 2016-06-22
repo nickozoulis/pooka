@@ -23,6 +23,7 @@ public class TempBolt extends BaseRichBolt implements Serializable {
 
     @Override
     public void execute(Tuple input) {
+        System.out.println("<<<<<<<<<>>>>>>>" + input.getString(0));
         outputCollector.emit(new Values(input.getString(0)));
     }
 
