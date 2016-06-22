@@ -27,43 +27,25 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
         if (!input.getBooleanByField("ack")) {
             category = input.getStringByField("category");
 
-            if (!getViews().containsKey(window)) {
-                getViews().put(window, new MyView(getTableSpeed(), getTableRaw()));
-                getRawPuts().put(window, new ArrayList<Put>());
+            if (!getPookaBundle().getViewMap().containsKey(window)) {
+                getPookaBundle().getViewMap().put(window, new MyView());
+                getPookaBundle().getRawPuts().put(window, new ArrayList<Put>());
             }
 
-            ((MyView) getViews().get(window)).process(category);
-            addRawPut(input);
+            ((MyView) getPookaBundle().getViewMap().get(window)).process(category);
+
+            Put p = createPutFromTuple(input);
+            getPookaBundle().getRawPuts().get(window).add(p);
         } else {
-            processAck(window);
+            if (getPookaBundle().processAck(window)) {
+                flush(window);
+            }
         }
     }
 
-    private void processAck(Long window) {
-        getPookaBundle().processAck(window);
-    }
-
-    private void flush(Long timestamp) {
+    private Put createPutFromTuple(Tuple tuple) {
+        Put p = new Put(toBytes(tuple.getStringByField("videoId")), window);
         try {
-            getTableRaw().put(getRawPuts().get(timestamp));
-            writeSpeedViewToHBase(timestamp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeSpeedViewToHBase(Long timestamp) throws IOException {
-        Put p = new Put(Bytes.toBytes(timestamp), timestamp);
-        for (Map.Entry<String, Integer> entry : ((MyView) getViews().get(timestamp)).getViews().entrySet()) {
-            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes("count_" + entry.getKey()), toBytes(entry.getValue()));
-        }
-        getTableSpeed().put(p);
-    }
-
-    private void addRawPut(Tuple tuple) {
-        try {
-            Put p = new Put(toBytes(tuple.getStringByField("videoId")), window);
-
             byte[] cf;
             byte[] value;
             for (String field : tuple.getFields()) {
@@ -90,23 +72,31 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
                     p.addColumn(cf, toBytes(field), value);
                 }
             }
-
-            getRawPuts().get(window).add(p);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return p;
+    }
+
+    private void flush(Long window) {
+        try {
+            // Write raw data to master dataset in HBase.
+            getTableRaw().put(getPookaBundle().getRawPuts().get(window));
+            // Write speed views to speed view table in HBase.
+            writeSpeedViewToHBase(window);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private byte[] toBytes(String b) {
-        return Bytes.toBytes(b);
-    }
+    private void writeSpeedViewToHBase(Long window) throws IOException {
+        Put p = new Put(Bytes.toBytes(window), window);
 
-    private byte[] toBytes(Integer b) {
-        return Bytes.toBytes(b);
-    }
-
-    private byte[] toBytes(Double b) {
-        return Bytes.toBytes(b);
+        Map<String, Integer> m = getPookaBundle().getViewMap().get(window).getView();
+        for (Map.Entry<String, Integer> entry : m.entrySet()) {
+            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes("count_" + entry.getKey()), toBytes(entry.getValue()));
+        }
+        getTableSpeed().put(p);
     }
 
 }

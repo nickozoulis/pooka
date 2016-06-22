@@ -1,5 +1,5 @@
-import org.apache.hadoop.hbase.client.HTable;
-import speed.storm.PookaView;
+import speed.storm.bolt.PookaView;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,14 +7,13 @@ import java.util.Map;
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class MyView extends PookaView implements Serializable {
+public class MyView implements PookaView<String, Integer>, Serializable {
 
     private static final long serialVersionUID = -8448977864355211360L;
     private Map<String, Integer> views;
 
 
-    public MyView(HTable tableSpeed, HTable tableRaw) {
-        super(tableSpeed, tableRaw);
+    public MyView() {
         this.views = new HashMap<>();
     }
 
@@ -26,7 +25,8 @@ public class MyView extends PookaView implements Serializable {
         }
     }
 
-    public Map<String, Integer> getViews() {
+    @Override
+    public Map<String, Integer> getView() {
         return views;
     }
 }
