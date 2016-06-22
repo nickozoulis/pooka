@@ -1,6 +1,5 @@
 package speed.storm.bolt;
 
-import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class PookaBundle implements Serializable {
     private Map<Long, Integer> acks;
     private final int numOfInputBolts;
 
-    public PookaBundle(int numOfInputBolts, HTable tableRaw, HTable tableSpeed) {
+    public PookaBundle(int numOfInputBolts) {
         this.numOfInputBolts = numOfInputBolts;
         setViewMap(new HashMap<Long, PookaView>());
         setRawPuts(new HashMap<Long, List<Put>>());
@@ -34,6 +33,10 @@ public class PookaBundle implements Serializable {
         getViewMap().remove(window);
         getRawPuts().remove(window);
         acks.remove(window);
+    }
+
+    public Map<Long, Integer> getAcks() {
+        return acks;
     }
 
     public Map<Long, PookaView> getViewMap() {

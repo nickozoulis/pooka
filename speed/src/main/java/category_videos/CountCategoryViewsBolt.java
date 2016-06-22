@@ -1,3 +1,5 @@
+package category_videos;
+
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.storm.tuple.Tuple;
@@ -6,16 +8,17 @@ import speed.storm.bolt.PookaOutputBolt;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
+public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
     private static final long serialVersionUID = -1158550217238014753L;
     private Long window;
 
-    public NewCountCategoryViewsBolt(int numOfInputBolts) {
+    public CountCategoryViewsBolt(int numOfInputBolts) {
         super(numOfInputBolts);
     }
 
@@ -28,16 +31,17 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
             category = input.getStringByField("category");
 
             if (!getPookaBundle().getViewMap().containsKey(window)) {
-                getPookaBundle().getViewMap().put(window, new MyView());
+                getPookaBundle().getViewMap().put(window, new CustomView());
                 getPookaBundle().getRawPuts().put(window, new ArrayList<Put>());
+                getPookaBundle().getAcks().put(window, 0);
             }
 
-            ((MyView) getPookaBundle().getViewMap().get(window)).process(category);
+            ((CustomView) getPookaBundle().getViewMap().get(window)).process(category);
 
             Put p = createPutFromTuple(input);
             getPookaBundle().getRawPuts().get(window).add(p);
         } else {
-            // If all window bolts sent their data, proceed to flush.
+            // If all window bolts have sent their data, proceed to flush.
             if (getPookaBundle().processAck(window)) {
                 flush(window);
             }
@@ -82,7 +86,9 @@ public class NewCountCategoryViewsBolt extends PookaOutputBolt implements Serial
     private void flush(Long window) {
         try {
             // Write raw data to master dataset in HBase.
-            getTableRaw().put(getPookaBundle().getRawPuts().get(window));
+            List<Put> p = getPookaBundle().getRawPuts().get(window);
+            System.out.println(">>>>>>>>><<<<<<<< " + p.size());
+            getTableRaw().put(p);
             // Write speed views to speed view table in HBase.
             getTableSpeed().put(createPutFromView(window));
             // Remove data from bundle to release memory

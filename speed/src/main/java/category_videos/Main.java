@@ -1,3 +1,4 @@
+package category_videos;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
@@ -12,19 +13,21 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by nickozoulis on 11/06/2016.
  */
-public class NewMain {
+public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         // k = Num of input (window) bolts, n = Num of output (flush) bolts
         // k << n
-        int k, n;
+        int k, n, t;
         if (args.length == 2) {
             k = Integer.parseInt(args[0]);
             n = Integer.parseInt(args[1]);
+            t = Integer.parseInt(args[2]);
         } else {
-            System.out.println("Setting default values for parallelism, k = 1, n = 1");
+            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 1");
             k = 1;
             n = 1;
+            t = 1;
         }
 
         Config conf = new Config();
@@ -42,11 +45,11 @@ public class NewMain {
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
-        builder.setBolt("word-spitter", new NewSplitBolt(initWindow)
-                .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
+        builder.setBolt("word-spitter", new SplitBolt(initWindow)
+                .withTumblingWindow(new BaseWindowedBolt.Duration(t, TimeUnit.SECONDS)))
                 .setNumTasks(k)
                 .shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new NewCountCategoryViewsBolt(k))
+        builder.setBolt("word-counter", new CountCategoryViewsBolt(k))
                 .setNumTasks(n)
                 .fieldsGrouping("word-spitter", new Fields("window"));
 

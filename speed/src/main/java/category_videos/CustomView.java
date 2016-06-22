@@ -1,3 +1,5 @@
+package category_videos;
+
 import speed.storm.bolt.PookaView;
 
 import java.io.Serializable;
@@ -7,11 +9,11 @@ import java.util.Map;
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class MyView implements PookaView<String, Integer>, Serializable {
+public class CustomView implements PookaView<String, Integer>, Serializable {
     private static final long serialVersionUID = -899854871055918800L;
     private Map<String, Integer> views;
 
-    public MyView() {
+    public CustomView() {
         this.views = new HashMap<>();
     }
 

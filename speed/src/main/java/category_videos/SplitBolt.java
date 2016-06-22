@@ -1,3 +1,5 @@
+package category_videos;
+
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
@@ -10,10 +12,10 @@ import java.io.Serializable;
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class NewSplitBolt extends PookaInputBolt implements Serializable {
+public class SplitBolt extends PookaInputBolt implements Serializable {
     private static final long serialVersionUID = -9056231194989007924L;
 
-    public NewSplitBolt(Long window) {
+    public SplitBolt(Long window) {
         super(window);
     }
 

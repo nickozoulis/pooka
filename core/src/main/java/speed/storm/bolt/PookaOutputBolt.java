@@ -21,13 +21,16 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     private OutputCollector collector;
     private final int numOfInputBolts;
     private PookaBundle pookaBundle;
-    private HTable tableSpeed, tableRaw;
+    private transient HTable tableSpeed, tableRaw;
     private static boolean AUTO_FLUSH = false;
     private static boolean CLEAR_BUFFER_ON_FAIL = false;
 
     public PookaOutputBolt(int numOfInputBolts) {
         this.numOfInputBolts = numOfInputBolts;
+    }
 
+    @Override
+    public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         try {
             Configuration conf = Utils.setHBaseConfig();
 
@@ -40,11 +43,8 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
             e.printStackTrace();
         }
 
-        setPookaBundle(new PookaBundle(numOfInputBolts, tableRaw, tableSpeed));
+        setPookaBundle(new PookaBundle(numOfInputBolts));
     }
-
-    @Override
-    public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {}
 
     @Override
     public abstract void execute(Tuple input);
