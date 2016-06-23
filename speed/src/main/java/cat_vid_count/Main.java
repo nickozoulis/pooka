@@ -1,3 +1,4 @@
+package cat_vid_count;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
@@ -5,7 +6,6 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import serving.hbase.Utils;
-import speed.storm.bolt.PookaWindow;
 import speed.storm.spout.PookaKafkaSpout;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +51,7 @@ public class Main {
         builder.setBolt("word-spitter", new SplitBolt())
                 .setNumTasks(n)
                 .shuffleGrouping("kafka-spout");
-        builder.setBolt("window-creator", new PookaWindow(initWindow)
+        builder.setBolt("window-creator", new WindowBolt(initWindow)
                 .withTumblingWindow(new BaseWindowedBolt.Duration(t, TimeUnit.SECONDS)))
                 .setNumTasks(k)
                 .shuffleGrouping("word-spitter");

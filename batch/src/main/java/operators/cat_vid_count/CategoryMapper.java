@@ -1,4 +1,4 @@
-package operators.category_videos;
+package operators.cat_vid_count;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;

@@ -2,7 +2,6 @@ package speed.storm.bolt;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.log4j.Logger;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;

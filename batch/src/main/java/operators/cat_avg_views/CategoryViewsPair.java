@@ -1,4 +1,4 @@
-package operators.category_avg_views;
+package operators.cat_avg_views;
 
 
 import org.apache.spark.api.java.function.PairFunction;

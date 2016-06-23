@@ -1,8 +1,9 @@
+package cat_vid_count;
+
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.apache.storm.tuple.Tuple;
-import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
 import java.io.IOException;

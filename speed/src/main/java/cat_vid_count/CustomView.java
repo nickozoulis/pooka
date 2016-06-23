@@ -1,6 +1,7 @@
+package cat_vid_count;
+
 import org.apache.log4j.Logger;
 import speed.storm.bolt.PookaView;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
