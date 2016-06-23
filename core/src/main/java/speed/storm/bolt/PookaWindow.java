@@ -5,6 +5,7 @@ import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseWindowedBolt;
+import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.apache.storm.windowing.TupleWindow;
@@ -64,7 +65,19 @@ public class PookaWindow extends BaseWindowedBolt implements Serializable {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-
+        declarer.declare(new Fields(
+                "window",
+                "videoId",
+                "uploader",
+                "age",
+                "category",
+                "length",
+                "views",
+                "rate",
+                "ratings",
+                "comments",
+                "relatedIds",
+                "ack"));
     }
 
     @Override

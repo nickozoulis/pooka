@@ -37,9 +37,11 @@ public class TestMain {
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
         builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
-        builder.setBolt("word-counter", new PookaWindow(initWindow)
+        builder.setBolt("window-creator", new PookaWindow(initWindow)
                 .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
                 .shuffleGrouping("word-spitter");
+        builder.setBolt("word-counter", new CountCategoryViewsBolt(1))
+                .fieldsGrouping("window-creator", new Fields("window"));
 //        builder.setBolt("word-counter", new CountViewsPerCategory()
 //                .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
 //                .fieldsGrouping("word-spitter", new Fields("category"));
