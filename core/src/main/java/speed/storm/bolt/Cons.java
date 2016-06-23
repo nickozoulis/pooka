@@ -12,4 +12,7 @@ public class Cons {
     public static final String CF_MASTER_DATASET_OTHER = "o";
     public static final String localhost = "127.0.0.1";
     public static final String zk_port = "2181";
+    public static final String countPrefix = "count_";
+    public static final String avgPrefix = "avg_";
+    public static final String stdevPrefix = "stdev_";
 }
