@@ -5,10 +5,8 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import serving.hbase.Utils;
-import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaWindow;
 import speed.storm.spout.PookaKafkaSpout;
-
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by nickozoulis on 11/06/2016.
  */
-public class TestMain {
+public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         // k = Num of input (window) bolts, n = Num of output (flush) bolts
