@@ -19,6 +19,20 @@ import java.util.concurrent.TimeUnit;
 public class TestMain {
 
     public static void main(String[] args) throws InterruptedException {
+        // k = Num of input (window) bolts, n = Num of output (flush) bolts
+        // k << n
+        int k, n, t;
+        if (args.length == 3) {
+            k = Integer.parseInt(args[0]);
+            n = Integer.parseInt(args[1]);
+            t = Integer.parseInt(args[2]);
+        } else {
+            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 1");
+            k = 1;
+            n = 1;
+            t = 10;
+        }
+
         Utils.deleteAllSchemaTables();
         Utils.createAllSchemaTables();
 
@@ -36,16 +50,16 @@ public class TestMain {
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
-        builder.setBolt("word-spitter", new SplitBolt()).shuffleGrouping("kafka-spout");
+        builder.setBolt("word-spitter", new SplitBolt())
+                .setNumTasks(n)
+                .shuffleGrouping("kafka-spout");
         builder.setBolt("window-creator", new PookaWindow(initWindow)
-                .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
+                .withTumblingWindow(new BaseWindowedBolt.Duration(t, TimeUnit.SECONDS)))
+                .setNumTasks(k)
                 .shuffleGrouping("word-spitter");
-        builder.setBolt("word-counter", new CountCategoryViewsBolt(1))
+        builder.setBolt("word-counter", new CountCategoryViewsBolt(k))
+                .setNumTasks(n)
                 .fieldsGrouping("window-creator", new Fields("window"));
-//        builder.setBolt("word-counter", new CountViewsPerCategory()
-//                .withTumblingWindow(new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS)))
-//                .fieldsGrouping("word-spitter", new Fields("category"));
-
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
