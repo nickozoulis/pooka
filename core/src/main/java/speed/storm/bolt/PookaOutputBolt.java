@@ -10,10 +10,10 @@ import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
-import org.apache.xalan.xsltc.util.IntegerArray;
 import serving.hbase.Utils;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +32,12 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     private boolean CLEAR_BUFFER_ON_FAIL = false;
     // For monitoring purpose
     protected int TASK_ID;
+    private Long window;
+    private Class customViewClass;
 
-    public PookaOutputBolt(int numOfInputBolts) {
+    public PookaOutputBolt(int numOfInputBolts, Class customViewClass) {
         this.numOfInputBolts = numOfInputBolts;
+        this.customViewClass = customViewClass;
     }
 
     @Override
@@ -56,7 +59,44 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     }
 
     @Override
-    public abstract void execute(Tuple input);
+    public void execute(Tuple input) {
+        window = input.getLongByField("window");
+
+        if (!input.getBooleanByField("ack")) {
+            logger.info("Received normal tuple");
+
+            try {
+                if (!getPookaBundle().getViewMap().containsKey(window)) {
+                    logger.info("Initialising PookaBundle structures for window: " + window);
+
+                    // Instantiate class using reflection
+                    getPookaBundle().getViewMap().put(window, (PookaView)customViewClass.newInstance());
+                    getPookaBundle().getRawPuts().put(window, new ArrayList<Put>());
+                    getPookaBundle().getAcks().put(window, 0);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            processTuple(input);
+            logger.info("Processed tuple for speed view");
+
+            Put p = createPutFromTuple(input);
+            getPookaBundle().getRawPuts().get(window).add(p);
+            logger.info("Tuple appended to raw puts");
+        } else {
+            logger.info("Received ack tuple");
+            // If all window bolts have sent their data, proceed to flush.
+            if (getPookaBundle().processAck(window)) {
+                logger.info("All " + getNumOfInputBolts() + " ack tuples gathered for window with ID: " + window);
+                flush(window, Cons.countPrefix);
+            }
+        }
+    }
+
+    protected abstract void processTuple(Tuple input);
+
+    public abstract Put createPutFromTuple(Tuple input);
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {}
@@ -146,4 +186,6 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     public HTable getTableSpeed() {
         return this.tableSpeed;
     }
+
+    public Long getWindow() {return this.window;}
 }

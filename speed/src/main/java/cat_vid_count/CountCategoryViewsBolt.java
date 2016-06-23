@@ -6,8 +6,6 @@ import org.apache.storm.tuple.Tuple;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
 import java.io.Serializable;
-import java.util.ArrayList;
-
 
 /**
  * Created by nickozoulis on 20/06/2016.
@@ -15,46 +13,22 @@ import java.util.ArrayList;
 public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
     private static final Logger logger = Logger.getLogger(CountCategoryViewsBolt.class);
     private static final long serialVersionUID = -1158550217238014753L;
-    private Long window;
 
     public CountCategoryViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts);
+        super(numOfInputBolts, CustomView.class);
     }
 
     @Override
-    public void execute(Tuple input) {
-        window = input.getLongByField("window");
+    protected void processTuple(Tuple input) {
+        String category = input.getStringByField("category");
 
-        String category;
-        if (!input.getBooleanByField("ack")) {
-            logger.info("Received normal tuple");
-            category = input.getStringByField("category");
-
-            if (!getPookaBundle().getViewMap().containsKey(window)) {
-                logger.info("Initialising PookaBundle structures for window: " + window);
-                getPookaBundle().getViewMap().put(window, new CustomView());
-                getPookaBundle().getRawPuts().put(window, new ArrayList<Put>());
-                getPookaBundle().getAcks().put(window, 0);
-            }
-
-            ((CustomView) getPookaBundle().getViewMap().get(window)).process(category);
-            logger.info("Processed tuple for speed view");
-
-            Put p = createPutFromTuple(input);
-            getPookaBundle().getRawPuts().get(window).add(p);
-            logger.info("Tuple appended to raw puts");
-        } else {
-            logger.info("Received ack tuple");
-            // If all window bolts have sent their data, proceed to flush.
-            if (getPookaBundle().processAck(window)) {
-                logger.info("All " + getNumOfInputBolts() + " ack tuples gathered for window with ID: " + window);
-                flush(window, Cons.countPrefix);
-            }
-        }
+        ((CustomView) getPookaBundle().getViewMap().get(getWindow()))
+                .process(category);
     }
 
-    private Put createPutFromTuple(Tuple tuple) {
-        Put p = new Put(toBytes(tuple.getStringByField("videoId")), window);
+    @Override
+    public Put createPutFromTuple(Tuple tuple) {
+        Put p = new Put(toBytes(tuple.getStringByField("videoId")), getWindow());
         try {
             byte[] cf;
             byte[] value;
