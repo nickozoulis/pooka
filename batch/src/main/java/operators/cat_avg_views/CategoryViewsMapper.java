@@ -20,8 +20,8 @@ public class CategoryViewsMapper implements Function<Tuple2<ImmutableBytesWritab
             Result result = tuple._2;
 
             s = Bytes.toString(result.getValue(Cons.CF_MASTER_DATASET_INFO.getBytes(), "category".getBytes()));
-            s += " ";
-            s += Bytes.toString(result.getValue(Cons.CF_MASTER_DATASET_INFO.getBytes(), "views".getBytes()));
+            s += "---";
+            s += Bytes.toInt(result.getValue(Cons.CF_MASTER_DATASET_INFO.getBytes(), "views".getBytes()));
 
             return s;
         } catch (Exception e) {

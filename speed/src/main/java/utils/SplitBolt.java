@@ -1,4 +1,4 @@
-package cat_vid_count;
+package utils;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;

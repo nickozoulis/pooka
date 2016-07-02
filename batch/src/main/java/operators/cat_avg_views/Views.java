@@ -26,7 +26,7 @@ public class Views implements Serializable {
     }
 
     public double getAvg() {
-        return this.count / (double)this.value;
+        return (double)this.value / this.count;
     }
 
     public int getCount() {

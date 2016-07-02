@@ -1,6 +1,5 @@
 package operators.cat_avg_views;
 
-
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
@@ -12,7 +11,7 @@ public class CategoryViewsPair implements PairFunction<String, String, Integer> 
 
     @Override
     public Tuple2<String, Integer> call(String s) throws Exception {
-        String[] splits = s.split(" ");
+        String[] splits = s.split("---");
         return new Tuple2<>(splits[0], Integer.parseInt(splits[1]));
     }
 }

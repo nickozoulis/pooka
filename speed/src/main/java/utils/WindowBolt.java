@@ -1,4 +1,4 @@
-package cat_vid_count;
+package utils;
 
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.tuple.Fields;

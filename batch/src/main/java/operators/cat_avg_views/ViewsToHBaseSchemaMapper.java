@@ -23,7 +23,7 @@ public class ViewsToHBaseSchemaMapper implements PairFunction<Tuple2<String, Vie
         Put put = new Put(Bytes.toBytes(batchTimestamp), batchTimestamp);
         put.addColumn(Bytes.toBytes(Cons.CF_VIEWS),
                 Bytes.toBytes("avg_" + pair._1()),
-                Bytes.toBytes(pair._2().getAvg()));
+                Bytes.toBytes(pair._2().getAvg()+""));
 
         return new Tuple2<>(new ImmutableBytesWritable(), put);
     }
