@@ -7,6 +7,9 @@ import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import serving.hbase.Utils;
 import speed.storm.spout.PookaKafkaSpout;
+import utils.SplitBolt;
+import utils.WindowBolt;
+
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +28,7 @@ public class Main {
             n = Integer.parseInt(args[1]);
             t = Integer.parseInt(args[2]);
         } else {
-            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 1");
+            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 10");
             k = 1;
             n = 1;
             t = 10;

@@ -89,7 +89,7 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
             // If all window bolts have sent their data, proceed to flush.
             if (getPookaBundle().processAck(window)) {
                 logger.info("All " + getNumOfInputBolts() + " ack tuples gathered for window with ID: " + window);
-                flush(window, Cons.countPrefix);
+                flush(window, queryPrefix());
             }
         }
     }
@@ -97,6 +97,8 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
     protected abstract void processTuple(Tuple input);
 
     public abstract Put createPutFromTuple(Tuple input);
+
+    public abstract String queryPrefix();
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {}
@@ -139,7 +141,7 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
 
         while (it.hasNext()) {
             pair = (Map.Entry)it.next();
-            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes(queryPrefix + pair.getKey()), toBytes(pair.getValue()));
+            p.addColumn(Cons.CF_VIEWS.getBytes(), toBytes(queryPrefix + pair.getKey()), toBytes(pair.getValue()+""));
         }
 
         return p;

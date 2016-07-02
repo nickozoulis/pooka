@@ -1,8 +1,8 @@
 package cat_avg_views;
 
 import cat_vid_count.CountCategoryViewsBolt;
-import cat_vid_count.SplitBolt;
-import cat_vid_count.WindowBolt;
+import utils.SplitBolt;
+import utils.WindowBolt;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
@@ -10,6 +10,7 @@ import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import serving.hbase.Utils;
 import speed.storm.spout.PookaKafkaSpout;
+
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +29,7 @@ public class Main {
             n = Integer.parseInt(args[1]);
             t = Integer.parseInt(args[2]);
         } else {
-            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 1");
+            System.out.println("Setting default values for parallelism, k = 1, n = 1, t = 10");
             k = 1;
             n = 1;
             t = 10;
@@ -58,7 +59,7 @@ public class Main {
                 .withTumblingWindow(new BaseWindowedBolt.Duration(t, TimeUnit.SECONDS)))
                 .setNumTasks(k)
                 .shuffleGrouping("word-spitter");
-        builder.setBolt("word-counter", new CountCategoryViewsBolt(k))
+        builder.setBolt("avg-counter", new AvgCatViewsBolt(k))
                 .setNumTasks(n)
                 .fieldsGrouping("window-creator", new Fields("window"));
 

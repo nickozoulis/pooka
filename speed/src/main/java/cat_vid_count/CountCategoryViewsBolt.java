@@ -62,4 +62,9 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
         return p;
     }
 
+    @Override
+    public String queryPrefix() {
+        return Cons.countPrefix;
+    }
+
 }
