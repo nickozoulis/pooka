@@ -1,18 +1,19 @@
-package cat_avg_views;
+package cat_stdev_views;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.storm.tuple.Tuple;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
+
 import java.io.Serializable;
 
 /**
- * Created by nickozoulis on 02/07/2016.
+ * Created by nickozoulis on 04/07/2016.
  */
-public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
+public class StdevCatViewsBolt extends PookaOutputBolt implements Serializable {
 
-    public AvgCatViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts, CustomViewAvg.class);
+    public StdevCatViewsBolt(int numOfInputBolts) {
+        super(numOfInputBolts, CustomViewStdev.class);
     }
 
     @Override
@@ -20,7 +21,7 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
         String category = input.getStringByField("category");
         int views = Integer.parseInt(input.getStringByField("views"));
 
-        ((CustomViewAvg) getPookaBundle().getViewMap().get(getWindow()))
+        ((CustomViewStdev) getPookaBundle().getViewMap().get(getWindow()))
                 .process(category, views);
     }
 

@@ -15,14 +15,14 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
     private static final long serialVersionUID = -1158550217238014753L;
 
     public CountCategoryViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts, CustomView.class);
+        super(numOfInputBolts, CustomViewCount.class);
     }
 
     @Override
     protected void processTuple(Tuple input) {
         String category = input.getStringByField("category");
 
-        ((CustomView) getPookaBundle().getViewMap().get(getWindow()))
+        ((CustomViewCount) getPookaBundle().getViewMap().get(getWindow()))
                 .process(category);
     }
 

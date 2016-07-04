@@ -4,18 +4,17 @@ import org.apache.log4j.Logger;
 import speed.storm.bolt.PookaView;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Created by nickozoulis on 02/07/2016.
  */
-public class CustomView implements PookaView<String, Double>, Serializable {
-    private static final Logger logger = Logger.getLogger(CustomView.class);
+public class CustomViewAvg implements PookaView<String, Double>, Serializable {
+    private static final Logger logger = Logger.getLogger(CustomViewAvg.class);
     private Map<String, Integer> views_sum;
     private Map<String, Integer> views_total;
 
-    public CustomView() {
+    public CustomViewAvg() {
         this.views_sum = new HashMap<>();
         this.views_total = new HashMap<>();
     }
@@ -34,8 +33,6 @@ public class CustomView implements PookaView<String, Double>, Serializable {
     @Override
     public Map<String, Double> getView() {
         Map<String, Double> avg = new HashMap<>(views_sum.size());
-
-        Iterator it = views_sum.entrySet().iterator();
 
         for (Map.Entry pair : views_sum.entrySet()) {
             String cat = (String) pair.getKey();
