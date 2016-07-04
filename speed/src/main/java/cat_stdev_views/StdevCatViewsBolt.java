@@ -64,6 +64,6 @@ public class StdevCatViewsBolt extends PookaOutputBolt implements Serializable {
 
     @Override
     public String queryPrefix() {
-        return Cons.avgPrefix;
+        return Cons.stdevPrefix;
     }
 }
