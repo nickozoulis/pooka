@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class CustomViewAvg implements PookaView<String, Double>, Serializable {
     private static final Logger logger = Logger.getLogger(CustomViewAvg.class);
+    private static final long serialVersionUID = -7771464715482042960L;
     private Map<String, Integer> views_sum;
     private Map<String, Integer> views_total;
 

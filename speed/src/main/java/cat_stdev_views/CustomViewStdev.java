@@ -30,6 +30,7 @@ import java.util.Map;
  */
 public class CustomViewStdev implements PookaView<String, Double>, Serializable {
     private static final Logger logger = Logger.getLogger(CustomViewStdev.class);
+    private static final long serialVersionUID = -1313477175020276377L;
     private Map<String, Double> mean;
     private Map<String, Double> M2;
     private Map<String, Integer> n;

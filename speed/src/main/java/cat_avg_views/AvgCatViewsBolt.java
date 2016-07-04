@@ -10,6 +10,7 @@ import java.io.Serializable;
  * Created by nickozoulis on 02/07/2016.
  */
 public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
+    private static final long serialVersionUID = -6202820600520815730L;
 
     public AvgCatViewsBolt(int numOfInputBolts) {
         super(numOfInputBolts, CustomViewAvg.class);

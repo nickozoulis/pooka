@@ -11,6 +11,7 @@ import java.io.Serializable;
  * Created by nickozoulis on 04/07/2016.
  */
 public class StdevCatViewsBolt extends PookaOutputBolt implements Serializable {
+    private static final long serialVersionUID = 4456523762407437691L;
 
     public StdevCatViewsBolt(int numOfInputBolts) {
         super(numOfInputBolts, CustomViewStdev.class);
