@@ -13,7 +13,7 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
     private static final long serialVersionUID = -6202820600520815730L;
 
     public AvgCatViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts, CustomViewAvg.class);
+        super(numOfInputBolts, ViewAvg.class);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
         String category = input.getStringByField("category");
         int views = Integer.parseInt(input.getStringByField("views"));
 
-        ((CustomViewAvg) getPookaBundle().getViewMap().get(getWindow()))
+        ((ViewAvg) getPookaBundle().getViewMap().get(getWindow()))
                 .process(category, views);
     }
 

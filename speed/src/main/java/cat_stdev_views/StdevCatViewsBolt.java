@@ -14,7 +14,7 @@ public class StdevCatViewsBolt extends PookaOutputBolt implements Serializable {
     private static final long serialVersionUID = 4456523762407437691L;
 
     public StdevCatViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts, CustomViewStdev.class);
+        super(numOfInputBolts, ViewStdev.class);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class StdevCatViewsBolt extends PookaOutputBolt implements Serializable {
         String category = input.getStringByField("category");
         int views = Integer.parseInt(input.getStringByField("views"));
 
-        ((CustomViewStdev) getPookaBundle().getViewMap().get(getWindow()))
+        ((ViewStdev) getPookaBundle().getViewMap().get(getWindow()))
                 .process(category, views);
     }
 
