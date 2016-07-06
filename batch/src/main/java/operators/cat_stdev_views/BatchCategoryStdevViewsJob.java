@@ -1,31 +1,39 @@
-package operators.cat_avg_views;
+package operators.cat_stdev_views;
 
 import batch.spark.PookaBatchJob;
 import operators.utils.CategoryViewsMapper;
 import operators.utils.CategoryViewsPairMapper;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.util.StatCounter;
+import scala.Tuple3;
+
 import java.io.Serializable;
 
 /**
- * Created by nickozoulis on 19/06/2016.
+ * Created by nickozoulis on 06/07/2016.
  */
-public class BatchCategoryAverageViewsJob extends PookaBatchJob implements Serializable {
-    private static final long serialVersionUID = 4478393882397153293L;
+public class BatchCategoryStdevViewsJob extends PookaBatchJob implements Serializable {
 
-    public BatchCategoryAverageViewsJob(String appName, String mode) {
+    private static final long serialVersionUID = -4160227974516109214L;
+
+    public BatchCategoryStdevViewsJob(String appName, String mode) {
         super(appName, mode, new CategoryViewsMapper());
     }
 
     @Override
     public JavaPairRDD DAG() {
         JavaPairRDD<String, Integer> pairs = getBatchRDD().mapToPair(new CategoryViewsPairMapper());
-        JavaPairRDD<String, ViewsAvg> counters = pairs.combineByKey(
-                new CreateCombiner(),
+
+        /*  Using aggregateByKey to perform StatCounter aggregation,
+            so actually I can even have more statistics available */
+        JavaPairRDD<String, StatCounter> stats = pairs.aggregateByKey(
+                new StatCounter(),
                 new MergeValue(),
                 new MergeCombiner());
 
-        return counters;
+        return stats;
     }
 
     @Override
@@ -34,7 +42,7 @@ public class BatchCategoryAverageViewsJob extends PookaBatchJob implements Seria
     }
 
     public static void main(String[] args) {
-        new BatchCategoryAverageViewsJob("Avg", "local").start();
+        new BatchCategoryStdevViewsJob("Avg", "local").start();
     }
 
 }

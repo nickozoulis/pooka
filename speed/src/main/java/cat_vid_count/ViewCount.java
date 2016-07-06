@@ -9,12 +9,12 @@ import java.util.Map;
 /**
  * Created by nickozoulis on 20/06/2016.
  */
-public class CustomViewCount implements PookaView<String, Integer>, Serializable {
-    private static final Logger logger = Logger.getLogger(CustomViewCount.class);
+public class ViewCount implements PookaView<String, Integer>, Serializable {
+    private static final Logger logger = Logger.getLogger(ViewCount.class);
     private static final long serialVersionUID = -899854871055918800L;
     private Map<String, Integer> views;
 
-    public CustomViewCount() {
+    public ViewCount() {
         this.views = new HashMap<>();
     }
 

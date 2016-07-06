@@ -1,4 +1,4 @@
-package operators.cat_avg_views;
+package operators.utils;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.spark.api.java.function.Function;
 import scala.Tuple2;
 import speed.storm.bolt.Cons;
+
 import java.io.Serializable;
 
 /**

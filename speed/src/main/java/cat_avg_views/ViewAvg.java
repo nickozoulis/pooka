@@ -9,13 +9,13 @@ import java.util.Map;
 /**
  * Created by nickozoulis on 02/07/2016.
  */
-public class CustomViewAvg implements PookaView<String, Double>, Serializable {
-    private static final Logger logger = Logger.getLogger(CustomViewAvg.class);
+public class ViewAvg implements PookaView<String, Double>, Serializable {
+    private static final Logger logger = Logger.getLogger(ViewAvg.class);
     private static final long serialVersionUID = -7771464715482042960L;
     private Map<String, Integer> views_sum;
     private Map<String, Integer> views_total;
 
-    public CustomViewAvg() {
+    public ViewAvg() {
         this.views_sum = new HashMap<>();
         this.views_total = new HashMap<>();
     }

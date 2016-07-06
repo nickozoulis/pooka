@@ -5,22 +5,22 @@ import java.io.Serializable;
 /**
  * Created by nickozoulis on 19/06/2016.
  */
-public class Views implements Serializable {
+public class ViewsAvg implements Serializable {
     private static final long serialVersionUID = -2352703868507808352L;
     private int count;
     private int value;
 
-    public Views(int value){
+    public ViewsAvg(int value) {
         setCount(1);
         setValue(value);
     }
 
-    public Views(Views v, int value) {
+    public ViewsAvg(ViewsAvg v, int value) {
         this.count = v.getCount() + 1;
         this.value = v.getValue() + value;
     }
 
-    public Views(Views v1, Views v2) {
+    public ViewsAvg(ViewsAvg v1, ViewsAvg v2) {
         this.count = v1.getCount() + v2.getCount();
         this.value = v1.getValue() + v2.getValue();
     }

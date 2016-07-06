@@ -28,14 +28,14 @@ import java.util.Map;
  * else:
  * return M2 / (n - 1)
  */
-public class CustomViewStdev implements PookaView<String, Double>, Serializable {
-    private static final Logger logger = Logger.getLogger(CustomViewStdev.class);
+public class ViewStdev implements PookaView<String, Double>, Serializable {
+    private static final Logger logger = Logger.getLogger(ViewStdev.class);
     private static final long serialVersionUID = -1313477175020276377L;
     private Map<String, Double> mean;
     private Map<String, Double> M2;
     private Map<String, Integer> n;
 
-    public CustomViewStdev() {
+    public ViewStdev() {
         this.mean = new HashMap<>();
         this.n = new HashMap<>();
         this.M2 = new HashMap<>();
