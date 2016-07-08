@@ -1,8 +1,7 @@
-package cat_avg_views;
+package storm.cat_avg_views;
 
-import cat_vid_count.CountCategoryViewsBolt;
-import utils.SplitBolt;
-import utils.WindowBolt;
+import storm.utils.SplitBolt;
+import storm.utils.WindowBolt;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;

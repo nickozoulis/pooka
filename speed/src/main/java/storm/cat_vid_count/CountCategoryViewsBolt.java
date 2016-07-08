@@ -1,28 +1,29 @@
-package cat_avg_views;
+package storm.cat_vid_count;
 
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.log4j.Logger;
 import org.apache.storm.tuple.Tuple;
 import speed.storm.bolt.Cons;
 import speed.storm.bolt.PookaOutputBolt;
 import java.io.Serializable;
 
 /**
- * Created by nickozoulis on 02/07/2016.
+ * Created by nickozoulis on 20/06/2016.
  */
-public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
-    private static final long serialVersionUID = -6202820600520815730L;
+public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializable {
+    private static final Logger logger = Logger.getLogger(CountCategoryViewsBolt.class);
+    private static final long serialVersionUID = -1158550217238014753L;
 
-    public AvgCatViewsBolt(int numOfInputBolts) {
-        super(numOfInputBolts, ViewAvg.class);
+    public CountCategoryViewsBolt(int numOfInputBolts) {
+        super(numOfInputBolts, ViewCount.class);
     }
 
     @Override
     protected void processTuple(Tuple input) {
         String category = input.getStringByField("category");
-        int views = Integer.parseInt(input.getStringByField("views"));
 
-        ((ViewAvg) getPookaBundle().getViewMap().get(getWindow()))
-                .process(category, views);
+        ((ViewCount) getPookaBundle().getViewMap().get(getWindow()))
+                .process(category);
     }
 
     @Override
@@ -63,6 +64,7 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
 
     @Override
     public String queryPrefix() {
-        return Cons.avgPrefix;
+        return Cons.countPrefix;
     }
+
 }

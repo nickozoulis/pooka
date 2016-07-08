@@ -1,4 +1,4 @@
-package utils;
+package storm.utils;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;

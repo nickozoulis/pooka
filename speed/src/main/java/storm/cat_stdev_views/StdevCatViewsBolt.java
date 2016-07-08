@@ -1,4 +1,4 @@
-package cat_stdev_views;
+package storm.cat_stdev_views;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.storm.tuple.Tuple;

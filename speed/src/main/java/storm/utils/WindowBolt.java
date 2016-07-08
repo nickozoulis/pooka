@@ -1,4 +1,4 @@
-package utils;
+package storm.utils;
 
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.tuple.Fields;

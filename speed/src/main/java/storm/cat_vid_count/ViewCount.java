@@ -1,4 +1,4 @@
-package cat_vid_count;
+package storm.cat_vid_count;
 
 import org.apache.log4j.Logger;
 import speed.storm.bolt.PookaView;

@@ -1,4 +1,4 @@
-package cat_stdev_views;
+package storm.cat_stdev_views;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
@@ -7,8 +7,8 @@ import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 import serving.hbase.Utils;
 import speed.storm.spout.PookaKafkaSpout;
-import utils.SplitBolt;
-import utils.WindowBolt;
+import storm.utils.SplitBolt;
+import storm.utils.WindowBolt;
 
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;

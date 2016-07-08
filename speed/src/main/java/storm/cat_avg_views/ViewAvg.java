@@ -1,4 +1,4 @@
-package cat_avg_views;
+package storm.cat_avg_views;
 
 import org.apache.log4j.Logger;
 import speed.storm.bolt.PookaView;

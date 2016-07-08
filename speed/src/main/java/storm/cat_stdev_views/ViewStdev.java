@@ -1,4 +1,4 @@
-package cat_stdev_views;
+package storm.cat_stdev_views;
 
 import org.apache.log4j.Logger;
 import speed.storm.bolt.PookaView;
