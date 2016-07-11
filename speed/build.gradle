@@ -18,4 +18,25 @@ task fatJar(type: Jar) {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     with jar
 }
+//----------------- for spark streaming ----------------
+// http://www.sureshpw.com/2015/10/building-akka-bundle-with-all.html
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    }
+}
 
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
+        resource = 'reference.conf'
+    }
+    // Issue: org.apache.tools.zip.Zip64RequiredException: archive contains more than 65535 entries
+    // Solution:
+    zip64 = true
+    // And run with "java -cp" instead of "java -jar"
+}
