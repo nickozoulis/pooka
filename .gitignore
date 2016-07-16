@@ -1,4 +1,4 @@
-# built application files
+# bu	ilt application files
 *.apk
 *.ap_
 
@@ -27,9 +27,21 @@ proguard/
 *.ipr
 *.iws
 .idea/
+META-INF/*
+META-INF
+out/*
+out
 
 #Gradle
 .gradletasknamecache
 .gradle/
 build/
 bin/
+
+# Mac
+.DS_Store
+
+# Maven
+*/target
+*target*
+log/
