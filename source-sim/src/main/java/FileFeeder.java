@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * Created by nickozoulis on 18/06/2016.
  */
-public class Main {
+public class FileFeeder {
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
             System.out.println("First argument should be the topic and second should be the input filepath");
