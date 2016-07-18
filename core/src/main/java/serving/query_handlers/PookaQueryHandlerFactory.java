@@ -13,7 +13,7 @@ public class PookaQueryHandlerFactory {
         try {
             switch (query) {
                 case COUNT_CATEGORY_VIEWS:
-                    queryHandler = new CountH andler();
+                    queryHandler = new CountHandler();
                     break;
                 case AVG_CATEGORY_VIEWS:
                     queryHandler = new AvgHandler();

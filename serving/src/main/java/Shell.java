@@ -67,7 +67,7 @@ public class Shell {
      * Handles incoming query in parallel by starting new thread.
      * @param query The type of the query to be issued.
      */
-    //TODO: Use Thread Pool for efficiency
+    //TODO: Use Thread Pooling for efficiency
     private static void handleQuery(PookaQuery query) {
         PookaQueryHandlerFactory factory = new PookaQueryHandlerFactory();
 
