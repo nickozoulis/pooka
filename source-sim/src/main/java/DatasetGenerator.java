@@ -1,5 +1,6 @@
 import source.kafka.KafkaProducerFactory;
 import source.kafka.IProducer;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,7 +12,11 @@ import java.util.Random;
  */
 public class DatasetGenerator {
     // %s = string category, %d = int # of video views
-    private static String template = "LKh7zAJ4nwo\tTheReceptionist\t653\t%s\t424\t%d\t4.34\t1305\t744\tDjdA-5oKYFQ\tNxTDlnOuybo\tc-8VuICzXtU\tDH56yrIO5nI\tW1Uo5DQTtzc\tE-3zXq_r4w0\t1TCeoRPg5dE\tyAr26YhuYNY\t2ZgXx72XmoE\t-7ClGo-YgZ0\tvmdPOOd6cxI\tKRHfMQqSHpk\tpIMpORZthYw\t1tUDzOp10pk\theqocRij5P0\t_XIuvoH6rUg\tLGVU5DsezE0\tuO2kj6_D8B4\txiDqywcDQRM\tuX81lMev6_o";
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+    private static String template = "%s\tTheReceptionist\t653\t%s\t424\t%d\t4.34\t1305\t744\tDjdA-5oKYFQ\t" +
+            "NxTDlnOuybo\tc-8VuICzXtU\tDH56yrIO5nI\tW1Uo5DQTtzc\tE-3zXq_r4w0\t1TCeoRPg5dE\tyAr26YhuYNY\t2ZgXx72XmoE\t" +
+            "-7ClGo-YgZ0\tvmdPOOd6cxI\tKRHfMQqSHpk\tpIMpORZthYw\t1tUDzOp10pk\theqocRij5P0\t_XIuvoH6rUg\tLGVU5DsezE0\t" +
+            "uO2kj6_D8B4\txiDqywcDQRM\tuX81lMev6_o";
     private static String[] categories = {
             "Entertainment",
             "Autos & Vehicles",
@@ -49,7 +54,7 @@ public class DatasetGenerator {
 
         int upper = Integer.parseInt(args[1]);
 
-        for (int i=0; i<upper; i++) {
+        for (int i = 0; i < upper; i++) {
             producer.send(strGenerator());
 
             if (i % 1000 == 0) {
@@ -60,9 +65,22 @@ public class DatasetGenerator {
     }
 
     private static String strGenerator() {
+        String videoId = randomAlphaNumeric(11);
         String category = categories[r.nextInt(categories.length - 1)];
         int views = r.nextInt(10000000);
 
-        return String.format(template, category, views);
+        return String.format(template, videoId, category, views);
     }
+
+    public static String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        int character;
+        while (count-- != 0) {
+            character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
+
+
 }

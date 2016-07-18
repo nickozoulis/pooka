@@ -120,9 +120,11 @@ public abstract class PookaOutputBolt extends BaseRichBolt implements Serializab
             List<Put> p = getPookaBundle().getRawPuts().get(window);
             logger.info("The size of raw tuples to be flushed to master dataset is : " + p.size());
             getTableRaw().put(p);
+            getTableRaw().flushCommits();
             logger.info("Flushed raw tuples to HBase");
             // Write speed views to speed view table in HBase.
             getTableSpeed().put(createPutFromView(window, queryPrefix));
+            getTableSpeed().flushCommits();
             logger.info("Flushed speed views to HBase");
             // Remove data from bundle to release memory
             getPookaBundle().removeFromBundle(window);

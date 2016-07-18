@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 dependencies {
     compile project(':core')
+    compile group: 'jline', name: 'jline', version: '2.14.2'
 }
 
 //create a single Jar with all dependencies

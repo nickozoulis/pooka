@@ -64,9 +64,9 @@ public class Main {
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
-        Thread.sleep(60000);
-        cluster.killTopology("KafkaStormSample");
-        cluster.shutdown();
+//        Thread.sleep(120000);
+//        cluster.killTopology("KafkaStormSample");
+//        cluster.shutdown();
     }
 
 }
