@@ -25,7 +25,7 @@ public class Shell {
 
         try {
             console = new ConsoleReader();
-            console.setPrompt("serving_layer> ");
+            console.setPrompt("pooka_shell> ");
 
             String line;
             // Gets user's input
@@ -63,11 +63,16 @@ public class Shell {
         }
     }
 
+    /**
+     * Handles incoming query in parallel by starting new thread.
+     * @param query The type of the query to be issued.
+     */
+    //TODO: Use Thread Pool for efficiency
     private static void handleQuery(PookaQuery query) {
         PookaQueryHandlerFactory factory = new PookaQueryHandlerFactory();
 
         QueryHandler queryHandler = factory.getHandler(query);
 
-        queryHandler.handle();
+        new Thread(queryHandler).start();
     }
 }
