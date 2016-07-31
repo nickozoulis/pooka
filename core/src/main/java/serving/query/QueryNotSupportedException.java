@@ -1,4 +1,4 @@
-package serving.query_handlers;
+package serving.query;
 
 /**
  * Created by nickozoulis on 19/07/2016.

@@ -1,4 +1,4 @@
-package serving.query_handlers;
+package serving.query;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.HTable;
@@ -162,17 +162,15 @@ public class QueryHandler implements Runnable {
         }
     }
 
-    private void submitQueryTopology() {
-    }
-
     @Override
     public void run() {
         if (queryStatus) {
             // Gather views from batch_views and speed_views tables.
             printResult(gatherResult(), query);
         } else {
-            // Submit topology
-            submitQueryTopology();
+            // Submit query in both speed and batch layer.
+            QuerySubmitter.submit("storm", "spark", query);
+            // And start polling hbase for results.
             pollSpeedViewsTableForResult();
         }
     }

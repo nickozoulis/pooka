@@ -2,6 +2,10 @@ package storm.cat_vid_count;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.AuthorizationException;
+import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
@@ -62,11 +66,20 @@ public class Main {
                 .setNumTasks(n)
                 .fieldsGrouping("window-creator", new Fields("window"));
 
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
-//        Thread.sleep(120000);
-//        cluster.killTopology("KafkaStormSample");
-//        cluster.shutdown();
+//        LocalCluster cluster = new LocalCluster();
+//        cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
+
+        System.setProperty("storm.jar", "/home/nickoszoulis/speed-1.0-SNAPSHOT-all.jar");
+        try {
+            StormSubmitter.submitTopology("CountCategoryTopology", conf, builder.createTopology());
+        } catch (AlreadyAliveException e) {
+            e.printStackTrace();
+        } catch (InvalidTopologyException e) {
+            e.printStackTrace();
+        } catch (AuthorizationException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

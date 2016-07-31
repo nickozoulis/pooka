@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import serving.hbase.PookaQuery;
 import serving.hbase.Utils;
 import jline.TerminalFactory;
-import serving.query_handlers.QueryHandler;
+import serving.query.QueryHandler;
 
 import java.io.IOException;
 import java.util.HashSet;
