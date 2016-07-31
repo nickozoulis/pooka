@@ -149,6 +149,22 @@ public class QueryHandler implements Runnable {
         System.out.println("----------------------------------------------");
     }
 
+
+    private void pollSpeedViewsTableForResult() {
+        Map map;
+        while (true) {
+            map = gatherViewsFromSpeedTable();
+
+            if (map.size() > 0) {
+                printResult(map, query);
+                break;
+            }
+        }
+    }
+
+    private void submitQueryTopology() {
+    }
+
     @Override
     public void run() {
         if (queryStatus) {
@@ -156,7 +172,8 @@ public class QueryHandler implements Runnable {
             printResult(gatherResult(), query);
         } else {
             // Submit topology
-            
+            submitQueryTopology();
+            pollSpeedViewsTableForResult();
         }
     }
 
