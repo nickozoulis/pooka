@@ -22,6 +22,8 @@ public class CoordinatorAvgCatViews {
         State state = new StateAvgCatViews();
 
         Configuration config = Utils.setHBaseConfig();
+        config.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+        config.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
 
         // Instantiating HTable class
         HTable table = new HTable(config, Cons.MASTER_DATASET);

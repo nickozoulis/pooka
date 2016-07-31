@@ -4,28 +4,26 @@ import org.apache.log4j.Logger;
 import serving.hbase.PookaQuery;
 import serving.hbase.Utils;
 import jline.TerminalFactory;
-import serving.query_handlers.PookaQueryHandlerFactory;
 import serving.query_handlers.QueryHandler;
+
 import java.io.IOException;
+import java.util.HashSet;
 
 /**
  * Created by nickozoulis on 18/06/2016.
  */
 public class Shell {
     private static final Logger logger = Logger.getLogger(Shell.class);
+    private static HashSet<PookaQuery> pookaQueries = new HashSet<>();
     private static ConsoleReader console;
     private Configuration config;
-
-    public static void main(String[] args) {
-        new Shell();
-    }
 
     public Shell() {
         config = Utils.setHBaseConfig();
 
         try {
             console = new ConsoleReader();
-            console.setPrompt("pooka_shell> ");
+            console.setPrompt("pooka> ");
 
             String line;
             // Gets user's input
@@ -69,10 +67,20 @@ public class Shell {
      */
     //TODO: Use Thread Pooling for efficiency
     private static void handleQuery(PookaQuery query) {
-        PookaQueryHandlerFactory factory = new PookaQueryHandlerFactory();
+        QueryHandler queryHandler;
 
-        QueryHandler queryHandler = factory.getHandler(query);
+        if (pookaQueries.contains(query)) {
+            queryHandler = new QueryHandler(query, true);
+        } else {
+            pookaQueries.add(query);
+            queryHandler = new QueryHandler(query, false);
+        }
 
         new Thread(queryHandler).start();
     }
+
+    public static void main(String[] args) {
+        new Shell();
+    }
+
 }
