@@ -66,19 +66,19 @@ public class Main {
                 .setNumTasks(n)
                 .fieldsGrouping("window-creator", new Fields("window"));
 
-//        LocalCluster cluster = new LocalCluster();
-//        cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
+        LocalCluster cluster = new LocalCluster();
+        cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
 
-        System.setProperty("storm.jar", "/home/nickoszoulis/speed-1.0-SNAPSHOT-all.jar");
-        try {
-            StormSubmitter.submitTopology("CountCategoryTopology", conf, builder.createTopology());
-        } catch (AlreadyAliveException e) {
-            e.printStackTrace();
-        } catch (InvalidTopologyException e) {
-            e.printStackTrace();
-        } catch (AuthorizationException e) {
-            e.printStackTrace();
-        }
+//        System.setProperty("storm.jar", "/home/nickoszoulis/speed-1.0-SNAPSHOT-all.jar");
+//        try {
+//            StormSubmitter.submitTopology("CountCategoryTopology", conf, builder.createTopology());
+//        } catch (AlreadyAliveException e) {
+//            e.printStackTrace();
+//        } catch (InvalidTopologyException e) {
+//            e.printStackTrace();
+//        } catch (AuthorizationException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

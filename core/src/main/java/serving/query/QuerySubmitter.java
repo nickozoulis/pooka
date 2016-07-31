@@ -27,6 +27,11 @@ public class QuerySubmitter {
     }
 
     private static void submitSparkJob() {
+        try {
+            new ProcessBuilder("sh /home/nickoszoulis/batch.sh").start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void submitStormTopology(PookaQuery query) {
