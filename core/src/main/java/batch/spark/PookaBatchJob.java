@@ -30,8 +30,12 @@ public abstract class PookaBatchJob implements Serializable {
     private transient JavaSparkContext sc;
     private transient Configuration hBaseConfig;
     private JavaRDD<String> batchRDD;
+    private Long startTS, endTS;
 
-    protected PookaBatchJob(String appName, String mode, Function hbaseMapper) {
+    protected PookaBatchJob(String appName, String mode, Function hbaseMapper, Long startTS, Long endTS) {
+        setStartTS(startTS);
+        setEndTS(endTS);
+
         SparkConf conf = new SparkConf().setAppName(appName).setMaster(mode);
         sc = new JavaSparkContext(conf);
 
@@ -66,7 +70,7 @@ public abstract class PookaBatchJob implements Serializable {
     private JavaRDD<String> loadBatchRDD(Function hbaseMapper) throws IOException {
         // Scan master dataset table to start batch processing
         Scan scan = new Scan();
-        scan.setTimeRange(1, speedLastTimestamp + 1);   // +1 because upper bound is exclusive
+        scan.setTimeRange(startTS, endTS);   // +1 because upper bound is exclusive
 
         hBaseConfig.set(TableInputFormat.INPUT_TABLE, Cons.MASTER_DATASET);
         hBaseConfig.set(TableInputFormat.SCAN, convertScanToString(scan));
@@ -119,6 +123,14 @@ public abstract class PookaBatchJob implements Serializable {
 
     protected Long getBatchTimestamp() {
         return this.speedLastTimestamp;
+    }
+
+    protected void setStartTS(Long startTS) {
+        this.startTS = startTS;
+    }
+
+    protected void setEndTS(Long endTS) {
+        this.endTS = endTS;
     }
 
 }
