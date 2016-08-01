@@ -59,7 +59,7 @@ public abstract class PookaBatchJob implements Serializable {
             Job job = Job.getInstance(hBaseConfig);
             job.setOutputFormatClass(TableOutputFormat.class);
             job.getConfiguration().set(TableOutputFormat.OUTPUT_TABLE, Cons.TABLE_BATCH);
-            DAG().mapToPair(hbaseSchemaAdapter()).saveAsNewAPIHadoopDataset(job.getConfiguration());
+            DAG();
         } catch (IOException e) {e.printStackTrace();}
     }
 
