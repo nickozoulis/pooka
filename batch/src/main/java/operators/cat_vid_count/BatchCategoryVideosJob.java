@@ -23,14 +23,11 @@ public class BatchCategoryVideosJob extends PookaBatchJob implements Serializabl
     @Override
     public JavaPairRDD DAG() {
         JavaPairRDD<String, Integer> pairs = getBatchRDD().mapToPair(new CategoryPair());
+        System.out.println(">>>> count pairs of batch rdd" + pairs.count());
         JavaPairRDD<String, Integer> counters = pairs.reduceByKey(new CategoryVideosCounter());
-        counters.foreach(new VoidFunction<Tuple2<String, Integer>>() {
-            @Override
-            public void call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
-                System.out.println(stringIntegerTuple2._1() + " " + stringIntegerTuple2._2());
-            }
-        });
+        System.out.println(">>>> count pairs of counters" + counters.count());
 
+        System.out.println(">>>>>> Finished DAG");
         return counters;
     }
 

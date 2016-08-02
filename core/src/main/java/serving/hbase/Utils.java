@@ -26,6 +26,8 @@ public class Utils {
 
         config.set("hbase.zookeeper.quorum", Cons.localhost);
         config.set("hbase.zookeeper.property.clientPort", Cons.zk_port);
+        // SocketTimeoutException issue from HBase Client
+        config.set("hbase.rpc.timeout", "1800000");
 
         return config;
     }

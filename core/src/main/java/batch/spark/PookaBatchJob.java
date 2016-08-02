@@ -45,7 +45,7 @@ public abstract class PookaBatchJob implements Serializable {
             HTable tableSpeed = new HTable(hBaseConfig, Cons.TABLE_SPEED);
 
             // Get most recent timestamp from speed views
-            speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
+            speedLastTimestamp = 1l;//loadSpeedLastTimestamp(tableSpeed);
 
             batchRDD = loadBatchRDD(hbaseMapper);
 
@@ -55,11 +55,12 @@ public abstract class PookaBatchJob implements Serializable {
     }
 
     protected void start() {
+        System.out.println(">>>> Starting spark job DAG");
         try {
             Job job = Job.getInstance(hBaseConfig);
             job.setOutputFormatClass(TableOutputFormat.class);
             job.getConfiguration().set(TableOutputFormat.OUTPUT_TABLE, Cons.TABLE_BATCH);
-            DAG();
+            DAG().mapToPair(hbaseSchemaAdapter()).saveAsNewAPIHadoopDataset(job.getConfiguration());
         } catch (IOException e) {e.printStackTrace();}
     }
 
@@ -68,6 +69,7 @@ public abstract class PookaBatchJob implements Serializable {
     public abstract PairFunction hbaseSchemaAdapter();
 
     private JavaRDD<String> loadBatchRDD(Function hbaseMapper) throws IOException {
+        System.out.println(">>>> Loading batch RDD");
         // Scan master dataset table to start batch processing
         Scan scan = new Scan();
         scan.setTimeRange(startTS, endTS);   // +1 because upper bound is exclusive
