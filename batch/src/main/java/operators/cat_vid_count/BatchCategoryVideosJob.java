@@ -23,9 +23,7 @@ public class BatchCategoryVideosJob extends PookaBatchJob implements Serializabl
     @Override
     public JavaPairRDD DAG() {
         JavaPairRDD<String, Integer> pairs = getBatchRDD().mapToPair(new CategoryPair());
-        System.out.println(">>>> count pairs of batch rdd" + pairs.count());
         JavaPairRDD<String, Integer> counters = pairs.reduceByKey(new CategoryVideosCounter());
-        System.out.println(">>>> count pairs of counters" + counters.count());
 
         System.out.println(">>>>>> Finished DAG");
         return counters;
@@ -48,6 +46,7 @@ public class BatchCategoryVideosJob extends PookaBatchJob implements Serializabl
         Long endTime = System.currentTimeMillis();
 
         logger.info(Math.abs(endTime-startTime));
+        System.out.println("<><><> "+Math.abs(endTime-startTime));
     }
 
 }
