@@ -29,7 +29,9 @@ public class BatchCategoryVideosJob extends PookaBatchJob implements Serializabl
     }
 
     public static void main(String[] args) {
-        new BatchCategoryVideosJob("Count", "local").start();
+        while (true) {
+            new BatchCategoryVideosJob("Count", "local").start();
+        }
     }
 
 }
