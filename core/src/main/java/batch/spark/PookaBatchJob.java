@@ -38,16 +38,24 @@ public abstract class PookaBatchJob implements Serializable {
         try {
             hBaseConfig = Utils.setHBaseConfig();
 
-            HTable tableSpeed = new HTable(hBaseConfig, Cons.TABLE_SPEED);
-            // Get most recent timestamp from speed views
-            speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
-            tableSpeed.close();
+            updateSpeedTimestamp();
 
             batchRDD = loadBatchRDD(hbaseMapper);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get most recent timestamp from speed views
+     * @throws IOException
+     * @throws TimestampNotFoundException
+     */
+    private void updateSpeedTimestamp() throws IOException, TimestampNotFoundException {
+        HTable tableSpeed = new HTable(hBaseConfig, Cons.TABLE_SPEED);
+        speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
+        tableSpeed.close();
     }
 
     protected void start() {
