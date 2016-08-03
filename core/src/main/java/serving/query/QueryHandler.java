@@ -74,6 +74,41 @@ public class QueryHandler implements Runnable {
     }
 
     private Map<String, Double> mergeViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
+        Map m = new HashMap();
+        switch (query) {
+            case COUNT_CATEGORY_VIEWS:
+                m = mergeCountViews(viewOrig, viewNew);
+                break;
+            case AVG_CATEGORY_VIEWS:
+                m = mergeAvgViews(viewOrig, viewNew);
+                break;
+            case STDEV_CATEGORY_VIEWS:
+                m = mergeStdevViews(viewOrig, viewNew);
+                break;
+            default:
+                try {
+                    throw new QueryNotSupportedException();
+                } catch (QueryNotSupportedException e) {
+                    e.printStackTrace();
+                }
+        }
+        return m;
+    }
+
+    //TODO
+    private Map mergeStdevViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
+
+        return viewOrig;
+    }
+
+    //TODO
+    private Map mergeAvgViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
+
+
+        return viewOrig;
+    }
+
+    private Map<String, Double> mergeCountViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
         Iterator it = viewNew.entrySet().iterator();
         Map.Entry<String, Double> pair;
 
