@@ -16,11 +16,8 @@ public class Shell {
     private static final Logger logger = Logger.getLogger(Shell.class);
     private static HashSet<PookaQuery> pookaQueries = new HashSet<>();
     private static ConsoleReader console;
-    private Configuration config;
 
     public Shell() {
-        config = Utils.setHBaseConfig();
-
         try {
             console = new ConsoleReader();
             console.setPrompt("pooka> ");
