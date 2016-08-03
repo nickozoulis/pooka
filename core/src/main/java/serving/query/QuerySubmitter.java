@@ -19,16 +19,36 @@ public class QuerySubmitter {
 
         switch (batch) {
             case "spark":
-                submitSparkJob();
+                submitSparkJob(query);
                 break;
             default:
                 break;
         }
     }
 
-    private static void submitSparkJob() {
+    private static void submitSparkJob(PookaQuery query) {
+        String queryMain = "operators.";
+
+        switch (query) {
+            case COUNT_CATEGORY_VIEWS:
+                queryMain += ".cat_vid_count.BatchCategoryVideosJob";
+                break;
+            case AVG_CATEGORY_VIEWS:
+                queryMain += "cat_avg_views.BatchCategoryAverageViewsJob";
+                break;
+            case STDEV_CATEGORY_VIEWS:
+                queryMain += "cat_stdev_views.BatchCategoryStdevViewsJob";
+                break;
+            default:
+                try {
+                    throw new QueryNotSupportedException();
+                } catch (QueryNotSupportedException e) {
+                    e.printStackTrace();
+                }
+        }
+
         try {
-            new ProcessBuilder("sh /home/nickoszoulis/batch.sh").start();
+            new ProcessBuilder("java -cp batch-1.0-SNAPSHOT-all.jar " + queryMain).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
