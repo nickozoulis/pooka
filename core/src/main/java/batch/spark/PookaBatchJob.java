@@ -39,9 +39,9 @@ public abstract class PookaBatchJob implements Serializable {
             hBaseConfig = Utils.setHBaseConfig();
 
             HTable tableSpeed = new HTable(hBaseConfig, Cons.TABLE_SPEED);
-
             // Get most recent timestamp from speed views
             speedLastTimestamp = loadSpeedLastTimestamp(tableSpeed);
+            tableSpeed.close();
 
             batchRDD = loadBatchRDD(hbaseMapper);
 
@@ -56,6 +56,7 @@ public abstract class PookaBatchJob implements Serializable {
             job.setOutputFormatClass(TableOutputFormat.class);
             job.getConfiguration().set(TableOutputFormat.OUTPUT_TABLE, Cons.TABLE_BATCH);
             DAG().mapToPair(hbaseSchemaAdapter()).saveAsNewAPIHadoopDataset(job.getConfiguration());
+            sc.close();
         } catch (IOException e) {e.printStackTrace();}
     }
 
