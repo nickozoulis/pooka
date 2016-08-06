@@ -1,5 +1,6 @@
 package serving.query;
 
+import org.apache.log4j.Logger;
 import serving.hbase.PookaQuery;
 import java.io.IOException;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
  * Created by nickozoulis on 31/07/2016.
  */
 public class QuerySubmitter {
+    private static final Logger logger = Logger.getLogger(QuerySubmitter.class);
     public static void submit(String speed, String batch, PookaQuery query) {
 
         switch (speed) {
@@ -48,7 +50,9 @@ public class QuerySubmitter {
         }
 
         try {
-            new ProcessBuilder("java -cp batch-1.0-SNAPSHOT-all.jar " + queryMain).start();
+            logger.info("Submitting query: " + query.toString());
+            Runtime.getRuntime().exec("java -cp /home/nickoszoulis/batch-1.0-SNAPSHOT-all.jar " + queryMain);
+//            new ProcessBuilder("java -cp /home/nickoszoulis/batch-1.0-SNAPSHOT-all.jar " + queryMain).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,7 +80,9 @@ public class QuerySubmitter {
         }
 
         try {
-            new ProcessBuilder("java -cp speed-1.0-SNAPSHOT-all.jar " + queryMain).start();
+            logger.info("Submitting query: " + query.toString());
+            Runtime.getRuntime().exec("java -cp /home/nickoszoulis/speed-all-1.0-SNAPSHOT.jar " + queryMain);
+//            new ProcessBuilder("java -cp  /home/nickoszoulis/speed-all-1.0-SNAPSHOT.jar " + queryMain).start();
         } catch (IOException e) {
             e.printStackTrace();
         }

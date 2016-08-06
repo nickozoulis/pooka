@@ -18,6 +18,9 @@ public class Shell {
     private static ConsoleReader console;
 
     public Shell() {
+//        Utils.deleteAllSchemaTables();
+//        Utils.createAllSchemaTables();
+
         try {
             console = new ConsoleReader();
             console.setPrompt("pooka> ");

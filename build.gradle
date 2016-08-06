@@ -16,6 +16,8 @@ subprojects {
         testCompile group: 'junit', name: 'junit', version: '4.11'
         compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
         compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
+
+
     }
 
     // Issue: SLF4J: Detected both log4j-over-slf4j.jar AND slf4j-log4j12.jar on the class path, preempting StackOverflowError.

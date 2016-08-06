@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.protobuf.ProtobufUtil;
 import org.apache.hadoop.hbase.protobuf.generated.ClientProtos;
 import org.apache.hadoop.hbase.util.Base64;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -25,6 +26,7 @@ import java.io.Serializable;
  * Created by nickozoulis on 17/06/2016.
  */
 public abstract class PookaBatchJob implements Serializable {
+    private static final Logger logger = Logger.getLogger(PookaBatchJob.class);
     private static final long serialVersionUID = -3258884693833351600L;
     private Long speedLastTimestamp;
     private transient JavaSparkContext sc;

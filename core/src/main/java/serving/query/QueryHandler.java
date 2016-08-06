@@ -5,9 +5,11 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.ColumnPrefixFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.PrefixFilter;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
 import serving.hbase.PookaQuery;
 import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
@@ -21,6 +23,7 @@ import java.util.NavigableMap;
  * Created by nickozoulis on 19/07/2016.
  */
 public class QueryHandler implements Runnable {
+    private static final Logger logger = Logger.getLogger(QueryHandler.class);
     private Long batchLastTimestamp = 0l;
     private final boolean queryStatus;
     private final PookaQuery query;
@@ -32,7 +35,7 @@ public class QueryHandler implements Runnable {
         this.query = query;
         this.queryStatus = queryStatus;
 
-        filter = new PrefixFilter(Bytes.toBytes(query.toString()));
+        filter = new ColumnPrefixFilter(Bytes.toBytes(query.toString()));
 
         try {
             tableSpeed = new HTable(hBaseConfig, Cons.TABLE_SPEED);
@@ -54,6 +57,7 @@ public class QueryHandler implements Runnable {
      * @return
      */
     private Map<String, Double> gatherViewsFromSpeedTable() {
+        logger.info("Gathering view(s) from speed table..");
         Map<String, Double> view = new HashMap<>();
 
         Scan scan = new Scan(Bytes.toBytes(batchLastTimestamp + 1));
@@ -133,6 +137,7 @@ public class QueryHandler implements Runnable {
      * @return
      */
     private Map<String, Double> gatherViewFromBatchTable() {
+        logger.info("Gathering view from batch table..");
         Map<String, Double> view = new HashMap<>();
 
         Scan scan = new Scan();
@@ -142,12 +147,12 @@ public class QueryHandler implements Runnable {
 
         try {
             ResultScanner rs = tableBatch.getScanner(scan);
-
             for (Result r : rs) {
                 view = getView(r);
 
                 // Note the timestamp. To be used as starting point for speed_views scanning.
                 batchLastTimestamp = new Long(r.raw()[0].getTimestamp());
+                logger.info("Last batch view's timestamp is: " + batchLastTimestamp );
                 break;
             }
         } catch (IOException e) {
@@ -188,6 +193,7 @@ public class QueryHandler implements Runnable {
     private void pollSpeedViewsTableForResult() {
         Map map;
         while (true) {
+            logger.info("Polling speed table for result..");
             map = gatherViewsFromSpeedTable();
 
             if (map.size() > 0) {
@@ -199,15 +205,17 @@ public class QueryHandler implements Runnable {
 
     @Override
     public void run() {
-        if (queryStatus) {
+//        if (queryStatus) {
+            logger.info("Query " + query.toString() + " already exists, gathering views..");
             // Gather views from batch_views and speed_views tables.
             printResult(gatherResult(), query);
-        } else {
-            // Submit query in both speed and batch layer.
-            QuerySubmitter.submit("storm", "spark", query);
-            // And start polling hbase for results.
-            pollSpeedViewsTableForResult();
-        }
+//        } else {
+//            logger.info("First occurence of query " + query.toString());
+//            // Submit query in both speed and batch layer.
+//            QuerySubmitter.submit("storm", "spark", query);
+//            // And start polling hbase for results.
+//            pollSpeedViewsTableForResult();
+//        }
     }
 
 }

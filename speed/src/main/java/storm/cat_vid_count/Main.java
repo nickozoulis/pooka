@@ -38,8 +38,8 @@ public class Main {
             t = 10;
         }
 
-        Utils.deleteAllSchemaTables();
-        Utils.createAllSchemaTables();
+//        Utils.deleteAllSchemaTables();
+//        Utils.createAllSchemaTables();
 
         Config conf = new Config();
         conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
