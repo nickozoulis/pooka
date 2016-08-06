@@ -72,6 +72,7 @@ public abstract class PookaBatchJob implements Serializable {
 
     public abstract PairFunction hbaseSchemaAdapter();
 
+
     private JavaRDD<String> loadBatchRDD(Function hbaseMapper) throws IOException {
         // Scan master dataset table to start batch processing
         Scan scan = new Scan();

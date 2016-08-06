@@ -22,7 +22,7 @@ public class BatchResultToHBaseSchemaMapper implements PairFunction<Tuple2<Strin
     @Override
     public Tuple2<ImmutableBytesWritable, Put> call(Tuple2<String, Integer> pair) throws Exception {
         Put put = new Put(Bytes.toBytes(batchTimestamp), batchTimestamp);
-        put.addColumn(Bytes.toBytes(Cons.CF_VIEWS), Bytes.toBytes(pair._1()), Bytes.toBytes(pair._2()));
+        put.addColumn(Bytes.toBytes(Cons.CF_VIEWS), Bytes.toBytes("count_" + pair._1()), Bytes.toBytes(pair._2()));
         System.out.println(">>>>>  " + pair._1() + ", " + pair._2());
         return new Tuple2<>(new ImmutableBytesWritable(), put);
     }
