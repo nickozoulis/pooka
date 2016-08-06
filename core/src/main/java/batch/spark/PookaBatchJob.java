@@ -101,23 +101,28 @@ public abstract class PookaBatchJob implements Serializable {
         return Base64.encodeBytes(proto.toByteArray());
     }
 
-    private Long loadSpeedLastTimestamp(HTable tableSpeed) throws IOException, TimestampNotFoundException {
+    private Long loadSpeedLastTimestamp(HTable tableSpeed) throws IOException {
         Long speedLastTimestamp = null;
 
-        // Scan Speed table to get last entry's timestamp
-        Scan scan = new Scan();
-        scan.addFamily(Cons.CF_VIEWS.getBytes());
-        scan.setReversed(true);
+        try {
+            // Scan Speed table to get last entry's timestamp
+            Scan scan = new Scan();
+            scan.addFamily(Cons.CF_VIEWS.getBytes());
+            scan.setReversed(true);
 
-        ResultScanner rs = tableSpeed.getScanner(scan);
+            ResultScanner rs = tableSpeed.getScanner(scan);
 
-        for (Result r : rs) {
-            speedLastTimestamp = new Long(r.raw()[0].getTimestamp());
-            break;
-        }
+            for (Result r : rs) {
+                speedLastTimestamp = new Long(r.raw()[0].getTimestamp());
+                break;
+            }
 
-        if (speedLastTimestamp == null) {
-            throw new TimestampNotFoundException();
+            if (speedLastTimestamp == null) {
+                throw new TimestampNotFoundException("Speed views table is empty. Setting speed last timestamp to zero.");
+            }
+        } catch (TimestampNotFoundException e) {
+            System.err.println(e.getMessage());
+            speedLastTimestamp = 0l;
         }
 
         return speedLastTimestamp;
