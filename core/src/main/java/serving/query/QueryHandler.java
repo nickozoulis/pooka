@@ -205,17 +205,17 @@ public class QueryHandler implements Runnable {
 
     @Override
     public void run() {
-//        if (queryStatus) {
+        if (queryStatus) {
             logger.info("Query " + query.toString() + " already exists, gathering views..");
             // Gather views from batch_views and speed_views tables.
             printResult(gatherResult(), query);
-//        } else {
-//            logger.info("First occurence of query " + query.toString());
-//            // Submit query in both speed and batch layer.
+        } else {
+            logger.info("First occurence of query " + query.toString());
+            // Submit query in both speed and batch layer.
 //            QuerySubmitter.submit("storm", "spark", query);
-//            // And start polling hbase for results.
-//            pollSpeedViewsTableForResult();
-//        }
+            // And start polling hbase for results.
+            pollSpeedViewsTableForResult();
+        }
     }
 
 }
