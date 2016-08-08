@@ -18,8 +18,8 @@ public class Shell {
     private static ConsoleReader console;
 
     public Shell() {
-//        Utils.deleteAllSchemaTables();
-//        Utils.createAllSchemaTables();
+        Utils.deleteAllSchemaTables();
+        Utils.createAllSchemaTables();
 
         try {
             console = new ConsoleReader();
@@ -67,16 +67,23 @@ public class Shell {
      */
     //TODO: Use Thread Pooling for efficiency
     private static void handleQuery(PookaQuery query) {
-        QueryHandler queryHandler;
+        while (true) {
+            QueryHandler queryHandler;
 
-        if (pookaQueries.contains(query)) {
-            queryHandler = new QueryHandler(query, true);
-        } else {
-            pookaQueries.add(query);
-            queryHandler = new QueryHandler(query, false);
+            if (pookaQueries.contains(query)) {
+                queryHandler = new QueryHandler(query, true);
+            } else {
+                pookaQueries.add(query);
+                queryHandler = new QueryHandler(query, false);
+            }
+
+            new Thread(queryHandler).start();
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
-        new Thread(queryHandler).start();
     }
 
     public static void main(String[] args) {

@@ -7,7 +7,6 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.ColumnPrefixFilter;
 import org.apache.hadoop.hbase.filter.Filter;
-import org.apache.hadoop.hbase.filter.PrefixFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import serving.hbase.PookaQuery;
@@ -18,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by nickozoulis on 19/07/2016.
@@ -30,6 +30,7 @@ public class QueryHandler implements Runnable {
     private static Configuration hBaseConfig = Utils.setHBaseConfig();
     private HTable tableSpeed, tableBatch;
     private Filter filter;
+    static AtomicInteger COUNTER = new AtomicInteger(0);
 
     public QueryHandler(PookaQuery query, boolean queryStatus) {
         this.query = query;
@@ -177,6 +178,19 @@ public class QueryHandler implements Runnable {
     }
 
     public synchronized void printResult(Map map, PookaQuery query) {
+        // Log results to use as IDEAL
+        if (COUNTER.get() % 1420 == 0) {
+            logger.info("----------------------------------------------");
+            logger.info(">>> Results of query: " + query.name());
+
+            Iterator it = map.entrySet().iterator();
+            Map.Entry pair;
+            while (it.hasNext()) {
+                pair = (Map.Entry) it.next();
+                logger.info(pair.getKey() + " " + pair.getValue());
+            }
+            logger.info("----------------------------------------------");
+        }
         System.out.println("----------------------------------------------");
         System.out.println(">>> Results of query: " + query.name());
 
@@ -205,6 +219,7 @@ public class QueryHandler implements Runnable {
 
     @Override
     public void run() {
+        Long start = System.currentTimeMillis();
         if (queryStatus) {
             logger.info("Query " + query.toString() + " already exists, gathering views..");
             // Gather views from batch_views and speed_views tables.
@@ -212,10 +227,12 @@ public class QueryHandler implements Runnable {
         } else {
             logger.info("First occurence of query " + query.toString());
             // Submit query in both speed and batch layer.
-//            QuerySubmitter.submit("storm", "spark", query);
+            QuerySubmitter.submit("storm", "spark", query);
             // And start polling hbase for results.
             pollSpeedViewsTableForResult();
         }
+        Long end = System.currentTimeMillis();
+        logger.info("--> [query: " + query.toString() + ", id: " + COUNTER.getAndIncrement() + ", time: " + (end - start) +" ms] <--");
     }
 
 }
