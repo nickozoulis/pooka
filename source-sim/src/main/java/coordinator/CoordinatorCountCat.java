@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class CoordinatorCountCat {
     private static final Logger logger = Logger.getLogger(CoordinatorCountCat.class);
+
     //TODO: Merge all coordinators to one class so as to reuse code
     public static void main(String[] args) throws IOException {
 
@@ -61,15 +62,17 @@ public class CoordinatorCountCat {
         }
 
         Iterator iter = state.getState().entrySet().iterator();
+        logger.info("----------------------------------------------");
+        logger.info("lastTimestamp: " + endTS);
         while (iter.hasNext()) {
-            Map.Entry pair = (Map.Entry)iter.next();
+            Map.Entry pair = (Map.Entry) iter.next();
 
-            System.out.println(">>>>>>>>>>>> " + pair.getKey() + " : " + pair.getValue());
+            logger.info(">>>>>>>>>>>> " + pair.getKey() + " : " + pair.getValue());
         }
-
+        logger.info("----------------------------------------------");
         Long endTime = System.currentTimeMillis();
 
-        logger.info(Math.abs(endTime-startTime));
+        logger.info(Math.abs(endTime - startTime));
     }
 
 }

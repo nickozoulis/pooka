@@ -31,6 +31,7 @@ public class QueryHandler implements Runnable {
     private HTable tableSpeed, tableBatch;
     private Filter filter;
     static AtomicInteger COUNTER = new AtomicInteger(0);
+    private Long speedLastTimestamp = 0l;
 
     public QueryHandler(PookaQuery query, boolean queryStatus) {
         this.query = query;
@@ -70,6 +71,8 @@ public class QueryHandler implements Runnable {
 
             for (Result r : rs) {
                 view = mergeViews(view, getView(r));
+                //TODO: Remove below line after experiments
+                speedLastTimestamp = r.raw()[0].getTimestamp();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -181,6 +184,8 @@ public class QueryHandler implements Runnable {
         // Log results to use as IDEAL
         if (COUNTER.get() % 1420 == 0) {
             logger.info("----------------------------------------------");
+            logger.info("batchLastTimestamp: " + batchLastTimestamp);
+            logger.info("speedLastTimestamp: " + speedLastTimestamp);
             logger.info(">>> Results of query: " + query.name());
 
             Iterator it = map.entrySet().iterator();
@@ -192,6 +197,8 @@ public class QueryHandler implements Runnable {
             logger.info("----------------------------------------------");
         }
         System.out.println("----------------------------------------------");
+        System.out.println("batchLastTimestamp: " + batchLastTimestamp);
+        System.out.println("speedLastTimestamp: " + speedLastTimestamp);
         System.out.println(">>> Results of query: " + query.name());
 
         Iterator it = map.entrySet().iterator();
