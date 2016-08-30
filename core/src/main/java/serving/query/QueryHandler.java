@@ -13,6 +13,8 @@ import serving.hbase.PookaQuery;
 import serving.hbase.Utils;
 import speed.storm.bolt.Cons;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -240,6 +242,16 @@ public class QueryHandler implements Runnable {
         }
         Long end = System.currentTimeMillis();
         logger.info("--> [query: " + query.toString() + ", id: " + COUNTER.getAndIncrement() + ", time: " + (end - start) +" ms] <--");
+
+
+        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean();
+
+        logger.info("<> process_cpu_load: " + bean.getProcessCpuLoad());
+        logger.info("<> process_cpu_time: " + bean.getProcessCpuTime());
+        logger.info("<> system_cpu_load: " + bean.getSystemCpuLoad());
+        logger.info("<> total_physical_memory_size: " + bean.getTotalPhysicalMemorySize());
+        logger.info("<> fre_physical_memory_size: " + bean.getFreePhysicalMemorySize());
     }
 
 }
