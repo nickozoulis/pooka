@@ -158,7 +158,6 @@ public class QueryHandler implements Runnable {
 
                 // Note the timestamp. To be used as starting point for speed_views scanning.
                 batchLastTimestamp = new Long(r.raw()[0].getTimestamp());
-                logger.info("Last batch view's timestamp is: " + batchLastTimestamp );
                 break;
             }
         } catch (IOException e) {
@@ -184,39 +183,39 @@ public class QueryHandler implements Runnable {
 
     public synchronized void printResult(Map map, PookaQuery query) {
         // Log results to use as IDEAL
-        if (COUNTER.get() % 1420 == 0) {
-            logger.info("----------------------------------------------");
-            logger.info("batchLastTimestamp: " + batchLastTimestamp);
-            logger.info("speedLastTimestamp: " + speedLastTimestamp);
-            logger.info(">>> Results of query: " + query.name());
-
-            Iterator it = map.entrySet().iterator();
-            Map.Entry pair;
-            while (it.hasNext()) {
-                pair = (Map.Entry) it.next();
-                logger.info(pair.getKey() + " " + pair.getValue());
-            }
-            logger.info("----------------------------------------------");
-        }
-        System.out.println("----------------------------------------------");
-        System.out.println("batchLastTimestamp: " + batchLastTimestamp);
-        System.out.println("speedLastTimestamp: " + speedLastTimestamp);
-        System.out.println(">>> Results of query: " + query.name());
+//        if (COUNTER.get() % 1420 == 0) {
+//            logger.info("----------------------------------------------");
+//            logger.info("batchLastTimestamp: " + batchLastTimestamp);
+//            logger.info("speedLastTimestamp: " + speedLastTimestamp);
+//            logger.info(">>> Results of query: " + query.name());
+//
+//            Iterator it = map.entrySet().iterator();
+//            Map.Entry pair;
+//            while (it.hasNext()) {
+//                pair = (Map.Entry) it.next();
+//                logger.info(pair.getKey() + " " + pair.getValue());
+//            }
+//            logger.info("----------------------------------------------");
+//        }
+        logger.info("----------------------------------------------");
+        logger.info("batchLastTimestamp: " + batchLastTimestamp);
+        logger.info("speedLastTimestamp: " + speedLastTimestamp);
+        logger.info(">>> Results of query: " + query.name());
 
         Iterator it = map.entrySet().iterator();
         Map.Entry pair;
         while (it.hasNext()) {
             pair = (Map.Entry) it.next();
-            System.out.println(pair.getKey() + " " + pair.getValue());
+            logger.info(">>>>>>>>>>>>" + pair.getKey() + " : " + pair.getValue());
         }
-        System.out.println("----------------------------------------------");
+        logger.info("----------------------------------------------");
     }
 
 
     private void pollSpeedViewsTableForResult() {
         Map map;
         while (true) {
-            logger.info("Polling speed table for result..");
+            System.out.println("Polling speed table for result..");
             map = gatherViewsFromSpeedTable();
 
             if (map.size() > 0) {
@@ -236,7 +235,7 @@ public class QueryHandler implements Runnable {
         } else {
             logger.info("First occurence of query " + query.toString());
             // Submit query in both speed and batch layer.
-            QuerySubmitter.submit("storm", "spark", query);
+//            QuerySubmitter.submit("storm", "spark", query);
             // And start polling hbase for results.
             pollSpeedViewsTableForResult();
         }

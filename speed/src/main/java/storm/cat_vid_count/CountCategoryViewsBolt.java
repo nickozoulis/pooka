@@ -29,8 +29,9 @@ public class CountCategoryViewsBolt extends PookaOutputBolt implements Serializa
     @Override
     public Put createPutFromTuple(Tuple tuple) {
         //TODO: Replace after dataset loading
-        Put p = new Put(toBytes(tuple.getStringByField("videoId")), getWindow());
-//        Put p = new Put(toBytes(randomAlphaNumeric(11)), getWindow());
+//        Put p = new Put(toBytes(tuple.getStringByField("videoId")), getWindow());
+//        System.out.println("><><><><> row key "  + tuple.getStringByField("videoId"));
+        Put p = new Put(toBytes(randomAlphaNumeric(11)), getWindow());
 
         try {
             byte[] cf;

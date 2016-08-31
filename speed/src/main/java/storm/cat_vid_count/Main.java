@@ -38,8 +38,8 @@ public class Main {
             t = 10;
         }
 
-//        Utils.deleteAllSchemaTables();
-//        Utils.createAllSchemaTables();
+        Utils.deleteAllSchemaTables();
+        Utils.createAllSchemaTables();
 
         Config conf = new Config();
         conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
@@ -54,7 +54,7 @@ public class Main {
         final Long initWindow = System.currentTimeMillis();
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
+        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout())  ;
         builder.setBolt("word-spitter", new SplitBolt())
                 .setNumTasks(n)
                 .shuffleGrouping("kafka-spout");
