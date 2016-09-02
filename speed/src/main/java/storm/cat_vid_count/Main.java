@@ -54,7 +54,8 @@ public class Main {
         final Long initWindow = System.currentTimeMillis();
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout())  ;
+        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout())
+            .setNumTasks(k);
         builder.setBolt("word-spitter", new SplitBolt())
                 .setNumTasks(n)
                 .shuffleGrouping("kafka-spout");
