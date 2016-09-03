@@ -27,7 +27,8 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
 
     @Override
     public Put createPutFromTuple(Tuple tuple) {
-        Put p = new Put(toBytes(tuple.getStringByField("videoId")), getWindow());
+//        Put p = new Put(toBytes(tuple.getStringByField("videoId")), getWindow());
+        Put p = new Put(toBytes(randomAlphaNumeric(11)), getWindow());
         try {
             byte[] cf;
             byte[] value;
@@ -65,4 +66,17 @@ public class AvgCatViewsBolt extends PookaOutputBolt implements Serializable {
     public String queryPrefix() {
         return Cons.avgPrefix;
     }
+
+    //TODO: Remove below as they exist in DatasetGenerator
+    public static String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        int character;
+        while (count-- != 0) {
+            character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+
 }

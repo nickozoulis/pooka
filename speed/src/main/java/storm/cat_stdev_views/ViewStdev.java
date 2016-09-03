@@ -70,7 +70,7 @@ public class ViewStdev implements PookaView<String, Double>, Serializable {
 
     @Override
     public Map<String, Double> getView() {
-        if (n.size() < 2) {
+        if (this.n.size() < 2) {
             throw new NumberFormatException("More than two tuples needed to compute a standard deviation");
         } else {
             Map<String, Double> stdev = new HashMap<>(n.size());

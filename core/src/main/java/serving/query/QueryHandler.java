@@ -111,9 +111,22 @@ public class QueryHandler implements Runnable {
         return viewOrig;
     }
 
-    //TODO
     private Map mergeAvgViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
+        Iterator it = viewNew.entrySet().iterator();
+        Map.Entry<String, Double> pair;
 
+        while (it.hasNext()) {
+            pair = (Map.Entry) it.next();
+
+            String keyNew = pair.getKey();
+            double valueNew = pair.getValue();
+
+            if (viewOrig.containsKey(keyNew)) {
+                viewOrig.put(keyNew, (viewOrig.get(keyNew) + valueNew) / 2);
+            } else {
+                viewOrig.put(keyNew, valueNew);
+            }
+        }
 
         return viewOrig;
     }
