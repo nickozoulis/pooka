@@ -105,8 +105,22 @@ public class QueryHandler implements Runnable {
         return m;
     }
 
-    //TODO
     private Map mergeStdevViews(Map<String, Double> viewOrig, Map<String, Double> viewNew) {
+        Iterator it = viewNew.entrySet().iterator();
+        Map.Entry<String, Double> pair;
+
+        while (it.hasNext()) {
+            pair = (Map.Entry) it.next();
+
+            String keyNew = pair.getKey();
+            double valueNew = pair.getValue();
+
+            if (viewOrig.containsKey(keyNew)) {
+                viewOrig.put(keyNew, Math.sqrt(Math.pow(viewOrig.get(keyNew), 2) + Math.pow(valueNew, 2)));
+            } else {
+                viewOrig.put(keyNew, valueNew);
+            }
+        }
 
         return viewOrig;
     }
@@ -195,21 +209,6 @@ public class QueryHandler implements Runnable {
     }
 
     public synchronized void printResult(Map map, PookaQuery query) {
-        // Log results to use as IDEAL
-//        if (COUNTER.get() % 1420 == 0) {
-//            logger.info("----------------------------------------------");
-//            logger.info("batchLastTimestamp: " + batchLastTimestamp);
-//            logger.info("speedLastTimestamp: " + speedLastTimestamp);
-//            logger.info(">>> Results of query: " + query.name());
-//
-//            Iterator it = map.entrySet().iterator();
-//            Map.Entry pair;
-//            while (it.hasNext()) {
-//                pair = (Map.Entry) it.next();
-//                logger.info(pair.getKey() + " " + pair.getValue());
-//            }
-//            logger.info("----------------------------------------------");
-//        }
         logger.info("----------------------------------------------");
         logger.info("batchLastTimestamp: " + batchLastTimestamp);
         logger.info("speedLastTimestamp: " + speedLastTimestamp);
