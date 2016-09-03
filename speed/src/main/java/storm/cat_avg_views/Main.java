@@ -50,7 +50,8 @@ public class Main {
         final Long initWindow = System.currentTimeMillis();
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout());
+        builder.setSpout("kafka-spout", new PookaKafkaSpout(p).getSpout())
+                .setNumTasks(k);;
         builder.setBolt("word-spitter", new SplitBolt())
                 .setNumTasks(n)
                 .shuffleGrouping("kafka-spout");
@@ -64,9 +65,9 @@ public class Main {
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("KafkaStormSample", conf, builder.createTopology());
-        Thread.sleep(60000);
-        cluster.killTopology("KafkaStormSample");
-        cluster.shutdown();
+//        Thread.sleep(60000);
+//        cluster.killTopology("KafkaStormSample");
+//        cluster.shutdown();
     }
 
 }
