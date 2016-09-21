@@ -2,7 +2,7 @@
 <h5 align="center">
  Summer 2016, Master Thesis, University of Glasgow
  <br/>
- A flexible implementation framework for the Lambda architecture
+ An extensible implementation framework for the Lambda architecture
 </h5>
 <p align="center">
   <img src="https://github.com/nickozoulis/pooka/blob/master/pooka.png?raw=true" alt="Pooka's image"/>
